@@ -1,0 +1,5110 @@
+{
+  "skeleton_version": "4.9",
+  "theme_id": "lantern_garden_sokoban",
+  "genre_profile": {
+    "genre_id": "Logic / Sokoban",
+    "genre_family": "puzzle",
+    "core_activity": "solving",
+    "narrative_weight": "light",
+    "has_player": true
+  },
+  "world_context": {
+    "world_premise": {
+      "concept": "Ночные крыши города превратились в ярусный сад, где игрок-фонарщик толкает светящиеся горшки по клеткам, зажигая лунки-грядки и избегая теневых ловушек.",
+      "core_forces": "Свет горшков, тень крыш, ограниченная отмотка времени и пространственная логика расстановки.",
+      "engine_justification": "Entities ENGINE_SPEC: Player, PushableBox, Wall, Goal, ThinIce, SlipModifier — 6 слотов. Фактических объектов: Фонарщик, Светящийся горшок, Теневая стена, Лунка-грядка, Хрупкий мох, Скользкая черепица — 6. Генерирую 6. Locations ENGINE_SPEC: сцена-уровень (Sokoban), процедурная сцена — 2 типа. Архетипов сцены по квоте: 70. Каждый архетип использует один и тот же набор entity_type, но с уникальным базовым раскладом. Внутри архетипа MICRO-LEVEL DETAILER генерирует конкретные расклады для каждого микро. Генерирую 70 архетипов. Conflicts ENGINE_SPEC: довести все ящики до целей, уложиться в N шагов, без отката, без застоя, до зарастания клетки, в заданном порядке, без потери росы, комбинированный — 8 слотов. Генерирую 8. Resources ENGINE_SPEC: отмотка света, искры, светлячок, настройка фонаря, подсказка, право рестарт — 6 слотов. Генерирую 6. Factions ENGINE_SPEC: правило света, правило тени, правило мха, правило цели, правило отмотки — 5 слотов. Генерирую 5. Regions ENGINE_SPEC: старый сад, лабиринт изгородей, росные террасы, сланцевые переходы, круг вечного света — 5 слотов. Генерирую 5."
+    },
+    "world_history": {
+      "historical_eras": [
+        {
+          "era_name": "Эпоха дневных садов",
+          "duration": "Столетия",
+          "key_events": [
+            "Расцвет городского озеленения",
+            "Строительство ярусных крыш"
+          ],
+          "legacy": "Оставила после себя сеть пустых грядок на крышах"
+        },
+        {
+          "era_name": "Великое Затенение",
+          "duration": "Десятилетия",
+          "key_events": [
+            "Загрязнение неба",
+            "Исчезновение солнечного света"
+          ],
+          "legacy": "Крыши погрузились в вечную ночь, растения вымерли"
+        },
+        {
+          "era_name": "Эра Фонарщиков",
+          "duration": "Настоящее время",
+          "key_events": [
+            "Изобретение светящихся горшков",
+            "Появление первых садовников"
+          ],
+          "legacy": "Возрождение жизни через искусственный свет и логику расстановки"
+        }
+      ],
+      "current_state_origins": "Нехватка естественного света вынудила садовников использовать магические светящиеся горшки, которые можно только толкать, чтобы активировать спящие лунки на крышах."
+    },
+    "current_state": {
+      "active_forces": [
+        "Фонарщики-садовники",
+        "Теневые аномалии",
+        "Мшистые разрастания"
+      ],
+      "ongoing_processes": [
+        "Постепенное освещение крыш",
+        "Накопление искр",
+        "Износ механизмов отмотки"
+      ],
+      "tensions": [
+        "Ограниченный запас отмотки света",
+        "Риск загнать горшок в мёртвую тень"
+      ],
+      "impending_crises": [
+        "Полное зарастание нижних уровней мхом",
+        "Исчерпание запаса светящихся семян"
+      ]
+    },
+    "causal_systems": [
+      {
+        "id": "cs_001",
+        "cause": "Толчок горшка на лунку",
+        "process": "Активация светового резонанса",
+        "consequence": "Временное исчезновение соседних теневых стен",
+        "linked_engine_systems": [
+          "RuleSystem",
+          "GoalSystem"
+        ]
+      },
+      {
+        "id": "cs_002",
+        "cause": "Использование отмотки света",
+        "process": "Локальный временной сдвиг",
+        "consequence": "Оставление светового следа, дающего бесплатный ход",
+        "linked_engine_systems": [
+          "UndoSystem",
+          "MovementSystem"
+        ]
+      },
+      {
+        "id": "cs_003",
+        "cause": "Блокировка горшка в углу",
+        "process": "Нарушение потока света",
+        "consequence": "Генерация предупреждения о тупике (deadlock)",
+        "linked_engine_systems": [
+          "GoalSystem",
+          "UISystem"
+        ]
+      },
+      {
+        "id": "cs_004",
+        "cause": "Сбор искр",
+        "process": "Накопление мета-валюты",
+        "consequence": "Разблокировка новых настроек фонаря",
+        "linked_engine_systems": [
+          "RuleSystem",
+          "ProgressionState"
+        ]
+      },
+      {
+        "id": "cs_005",
+        "cause": "Шаг по хрупкому мху",
+        "process": "Деградация поверхности",
+        "consequence": "Провал или изменение типа клетки после прохождения",
+        "linked_engine_systems": [
+          "MovementSystem",
+          "RuleSystem"
+        ]
+      }
+    ],
+    "geography": {
+      "zones": [
+        "Нижние скаты",
+        "Центральные террасы",
+        "Высокие шпили",
+        "Заброшенные дымоходы"
+      ],
+      "spatial_logic": "Дискретная сетка, где каждая клетка имеет строгие правила проходимости и взаимодействия",
+      "boundaries": [
+        "Края крыш",
+        "Непроходимые парапеты",
+        "Глубокие теневые колодцы"
+      ],
+      "hazards": [
+        "Теневые ловушки",
+        "Скользкая черепица",
+        "Хрупкий мох"
+      ]
+    },
+    "environment": {
+      "climate_zones": [
+        "Вечная ночь",
+        "Туманные низины",
+        "Ветреные высоты"
+      ],
+      "ecological_biomes": [
+        "Мшистые кирпичи",
+        "Мокрый сланец",
+        "Медные водостоки"
+      ],
+      "natural_hazards": [
+        "Внезапные порывы ветра",
+        "Капающая конденсатная вода"
+      ],
+      "visual_signs": [
+        "Тёплое янтарное свечение",
+        "Серебристый лунный свет",
+        "Тёмно-синие тени"
+      ]
+    },
+    "resource_ecology": {
+      "origins": [
+        "Светящиеся горшки",
+        "Звёздная пыль",
+        "Старые фонари"
+      ],
+      "scarcity_logic": "Отмотка света строго лимитирована на уровень, искры даются за оптимальное решение",
+      "dependencies": [
+        "Настройки фонаря зависят от накопленных искр",
+        "Светлячки зависят от количества ходов"
+      ],
+      "extraction_challenges": [
+        "Необходимость идеального планирования маршрута",
+        "Риск потери ресурса при ошибке"
+      ]
+    },
+    "economy": {
+      "producers": [
+        "Освещённые грядки",
+        "Ежедневные испытания"
+      ],
+      "consumers": [
+        "Система модификаторов",
+        "Мета-прогрессия"
+      ],
+      "trade_routes": [
+        "Обмен светлячков на подсказки",
+        "Трата искр на постоянные улучшения"
+      ],
+      "black_markets": [
+        "Секретные уровни за идеальное прохождение"
+      ],
+      "trade_logic": "Оптимизация движений конвертируется в валюту прогрессии",
+      "dependencies": [
+        "Без искр невозможна покупка модификаторов"
+      ]
+    },
+    "power_structure": {
+      "centers_of_power": [
+        "Центральный маяк",
+        "Совет старших фонарщиков"
+      ],
+      "shadow_influences": [
+        "Теневые аномалии, искажающие правила"
+      ],
+      "authority_logic": "Кто освещает больше крыш, тот получает доступ к лучшим настройкам",
+      "contradictions": [
+        "Необходимость толкать горшки против желания сохранить их в безопасности"
+      ]
+    },
+    "technology_or_knowledge_system": {
+      "level": "Магический реализм, низкие технологии",
+      "key_innovations": [
+        "Светящиеся горшки",
+        "Механизм отмотки света",
+        "Модульные настройки фонаря"
+      ],
+      "forbidden_knowledge": [
+        "Попытки тянуть горшки вместо толкания",
+        "Игнорирование предупреждений о тупике"
+      ],
+      "limitations": [
+        "Отмотка работает только на несколько ходов назад",
+        "Горшки нельзя поднимать"
+      ],
+      "transmission": "Личное наставничество и практика на микро-уровнях"
+    },
+    "cultural_aspects": {
+      "belief_systems": [
+        "Культ Света и Порядка",
+        "Уважение к ограничениям сетки"
+      ],
+      "social_customs": [
+        "Молчаливое планирование перед первым ходом",
+        "Празднование идеального прохождения"
+      ],
+      "art_and_expression": [
+        "Узоры из светящихся лунок",
+        "Минималистичная эстетика ночного сада"
+      ]
+    },
+    "color_structure": {
+      "context_model": "spatial_regions",
+      "active_palette_families": [
+        "mossy_brick",
+        "wet_slate",
+        "copper_trim"
+      ],
+      "rule": "Каждый регион строго привязан к одному палитровому семейству для визуальной консистентности ассетов"
+    },
+    "player_role": {
+      "identity": "Фонарщик-садовник",
+      "motivation": "Возродить ночной сад, зажигая лунки и оптимизируя каждое движение",
+      "engine_loop_justification": "Игрок вводит направление, движок проверяет толчок, система целей проверяет победу, система отката позволяет исправить ошибки, создавая цикл спокойного экспериментирования"
+    },
+    "progression_causality": {
+      "world_reasons_for_growth": "Расширение освещённой территории открывает новые типы головоломок и модификаторы",
+      "expansion_triggers": [
+        "Освещение всех лунок на крыше",
+        "Накопление критической массы искр",
+        "Открытие секретных троп"
+      ]
+    },
+    "event_generation_space": {
+      "interaction_types": [
+        "Толчок",
+        "Откат",
+        "Активация правила",
+        "Сбор ресурса"
+      ],
+      "combination_logic": "Комбинация модификаторов меняет базовые правила движения или цели",
+      "escalation_triggers": [
+        "Уменьшение лимита ходов",
+        "Добавление новых типов клеток",
+        "Усложнение конфигурации стен"
+      ]
+    },
+    "world_rules": [
+      "Горшки можно только толкать, никогда не тянуть",
+      "Отмотка света оставляет временный световой след",
+      "Загнанный в угол горшок создаёт неисправимый тупик",
+      "Каждая лунка требует ровно один горшок",
+      "Настройки фонаря применяются ко всем микро-уровням стадии",
+      "Скользкая черепица продолжает движение до препятствия",
+      "Хрупкий мох разрушается после первого прохождения",
+      "Звёздный рейтинг зависит от эффективности использования ходов и откатов"
+    ],
+    "visual_world_logic": {
+      "architecture": "Ярусные крыши, кирпичные парапеты, медные водостоки",
+      "materials": "Мшистый кирпич, мокрый сланец, тёплое стекло горшков",
+      "motifs": "Круги (лунки), квадраты (горшки), сетка (крыша)",
+      "regional_differences": [
+        "Мшистые зоны более зелёные и мягкие",
+        "Сланцевые зоны тёмные и скользкие",
+        "Медные зоны яркие и отражающие"
+      ],
+      "faction_visual_languages": [
+        "Свет: янтарные и тёплые тона",
+        "Тень: глубокие синие и фиолетовые оттенки"
+      ]
+    },
+    "cross_system_dependencies": [
+      {
+        "source_id": "entity_002",
+        "relation": "activates",
+        "target_id": "entity_004",
+        "consequence": "Генерация события GOAL_REACHED",
+        "engine_system": "GoalSystem"
+      },
+      {
+        "source_id": "resource_001",
+        "relation": "enables",
+        "target_id": "entity_001",
+        "consequence": "Возврат состояния мира на 1-2 хода назад",
+        "engine_system": "UndoSystem"
+      },
+      {
+        "source_id": "location_001",
+        "relation": "contains",
+        "target_id": "entity_003",
+        "consequence": "Ограничение пространства движения",
+        "engine_system": "MovementSystem"
+      },
+      {
+        "source_id": "region_001",
+        "relation": "provides",
+        "target_id": "resource_002",
+        "consequence": "Награда за завершение уровня",
+        "engine_system": "ProgressionState"
+      },
+      {
+        "source_id": "conflict_001",
+        "relation": "validates",
+        "target_id": "location_070",
+        "consequence": "Определение условия победы микро-фазы",
+        "engine_system": "GoalSystem"
+      }
+    ]
+  },
+  "parts": {
+    "factions": [
+      {
+        "id": "faction_001",
+        "name": "Правило Света",
+        "role": "Механика активации",
+        "ideology_or_motivation": "Стремление к заполнению всех лунок тёплым светом",
+        "internal_structure": "Децентрализованная сеть светящихся узлов",
+        "internal_factions_or_tensions": [
+          "Конфликт между яркостью и экономией света"
+        ],
+        "core_interests": [
+          "Максимальное покрытие лунок",
+          "Сохранение светового потока"
+        ],
+        "resources_controlled": [
+          "resource_002",
+          "resource_003"
+        ],
+        "territory": [
+          "region_001",
+          "region_003"
+        ],
+        "methods_and_tactics": [
+          "Активация при контакте",
+          "Распространение свечения"
+        ],
+        "relationships": {
+          "faction_002": "противостоит",
+          "faction_004": "поддерживает"
+        },
+        "visual_identity": "Янтарное свечение, мягкие ореолы, тёплые частицы",
+        "expansion_hooks": [
+          "Новые типы светящихся элементов",
+          "Цепные реакции света",
+          "Временные источники света",
+          "Усиление яркости"
+        ],
+        "relevant_ids": [
+          "faction_002",
+          "faction_004",
+          "resource_002",
+          "resource_003",
+          "region_001",
+          "region_003"
+        ]
+      },
+      {
+        "id": "faction_002",
+        "name": "Правило Тени",
+        "role": "Механика ограничения",
+        "ideology_or_motivation": "Сохранение естественного мрака и препятствование хаотичному освещению",
+        "internal_structure": "Статичные зоны непроходимости и тупиков",
+        "internal_factions_or_tensions": [
+          "Абсолютная тень против полутени"
+        ],
+        "core_interests": [
+          "Блокировка путей",
+          "Создание тупиковых ситуаций"
+        ],
+        "resources_controlled": [],
+        "territory": [
+          "region_002",
+          "region_004"
+        ],
+        "methods_and_tactics": [
+          "Окружение целей",
+          "Блокировка углов"
+        ],
+        "relationships": {
+          "faction_001": "противостоит",
+          "faction_003": "усиливает"
+        },
+        "visual_identity": "Глубокие синие и фиолетовые тона, резкие границы, отсутствие свечения",
+        "expansion_hooks": [
+          "Подвижные тени",
+          "Тени, реагирующие на свет",
+          "Временные теневые барьеры",
+          "Иллюзорные тени"
+        ],
+        "relevant_ids": [
+          "faction_001",
+          "faction_003",
+          "region_002",
+          "region_004"
+        ]
+      },
+      {
+        "id": "faction_003",
+        "name": "Правило Мха",
+        "role": "Механика деградации",
+        "ideology_or_motivation": "Постепенное поглощение пространства природными силами",
+        "internal_structure": "Клетки с условным сроком жизни или однократным использованием",
+        "internal_factions_or_tensions": [
+          "Быстрое зарастание против медленного увядания"
+        ],
+        "core_interests": [
+          "Ограничение повторного использования путей",
+          "Усложнение маршрута"
+        ],
+        "resources_controlled": [],
+        "territory": [
+          "region_001",
+          "region_005"
+        ],
+        "methods_and_tactics": [
+          "Разрушение после прохода",
+          "Блокировка после активации"
+        ],
+        "relationships": {
+          "faction_002": "усиливает",
+          "faction_005": "нейтрально"
+        },
+        "visual_identity": "Зелёные и бирюзовые текстуры, мягкие края, органические формы",
+        "expansion_hooks": [
+          "Восстанавливающийся мох",
+          "Мох, меняющий направление",
+          "Ядовитый мох",
+          "Мох-пружина"
+        ],
+        "relevant_ids": [
+          "faction_002",
+          "faction_005",
+          "region_001",
+          "region_005"
+        ]
+      },
+      {
+        "id": "faction_004",
+        "name": "Правило Цели",
+        "role": "Механика валидации",
+        "ideology_or_motivation": "Строгий порядок и требование точного соответствия",
+        "internal_structure": "Статичные точки, требующие активации",
+        "internal_factions_or_tensions": [
+          "Обязательные цели против бонусных целей"
+        ],
+        "core_interests": [
+          "Точное позиционирование",
+          "Соблюдение условий уровня"
+        ],
+        "resources_controlled": [
+          "resource_003"
+        ],
+        "territory": [
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ],
+        "methods_and_tactics": [
+          "Требование присутствия горшка",
+          "Генерация награды при совпадении"
+        ],
+        "relationships": {
+          "faction_001": "поддерживает",
+          "faction_005": "требует"
+        },
+        "visual_identity": "Контурные круги, пульсирующее свечение при близости горшка",
+        "expansion_hooks": [
+          "Цели с порядком активации",
+          "Цели, требующие нескольких горшков",
+          "Исчезающие цели",
+          "Цели-ловушки"
+        ],
+        "relevant_ids": [
+          "faction_001",
+          "faction_005",
+          "resource_003",
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "faction_005",
+        "name": "Правило Отмотки",
+        "role": "Механика коррекции",
+        "ideology_or_motivation": "Предоставление второго шанса через управление временем",
+        "internal_structure": "Ресурсная система с ограниченным запасом и визуальными следами",
+        "internal_factions_or_tensions": [
+          "Щедрая отмотка против строгой экономии"
+        ],
+        "core_interests": [
+          "Поощрение экспериментов",
+          "Наказание за чрезмерное использование"
+        ],
+        "resources_controlled": [
+          "resource_001",
+          "resource_006"
+        ],
+        "territory": [
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ],
+        "methods_and_tactics": [
+          "Возврат состояния",
+          "Создание световых следов"
+        ],
+        "relationships": {
+          "faction_004": "требует",
+          "faction_003": "нейтрально"
+        },
+        "visual_identity": "Обратная анимация движения, светящиеся следы на сетке, мягкий звук",
+        "expansion_hooks": [
+          "Усиленная отмотка",
+          "Отмотка с изменением поля",
+          "Бесплатная отмотка за достижение",
+          "Отмотка, влияющая на соседей"
+        ],
+        "relevant_ids": [
+          "faction_004",
+          "faction_003",
+          "resource_001",
+          "resource_006",
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ]
+      }
+    ],
+    "regions": [
+      {
+        "id": "region_001",
+        "name": "Крыша Старого Сада",
+        "role": "Начальная зона обучения",
+        "biome_or_ecosystem": "Мшистые кирпичные крыши с базовой растительностью",
+        "climate": "Спокойная ночь, лёгкий туман",
+        "environmental_hazards": [
+          "Базовые тупики",
+          "Ограниченное пространство"
+        ],
+        "geographical_function": "Введение в механику толкания и отмотки",
+        "resources": [
+          "resource_001",
+          "resource_002"
+        ],
+        "locations": [
+          "location_001",
+          "location_002",
+          "location_003",
+          "location_004",
+          "location_005",
+          "location_006",
+          "location_007",
+          "location_008",
+          "location_009",
+          "location_010",
+          "location_011",
+          "location_012",
+          "location_013",
+          "location_014"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ],
+        "cultural_identity": "Традиции первых фонарщиков, простые и понятные формы",
+        "visual_identity": "Тёплый кирпич, зелёный мох, мягкое янтарное освещение",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Усложнение формы крыши",
+          "Добавление вертикальных элементов",
+          "Введение новых типов мха",
+          "Изменение паттернов освещения"
+        ],
+        "relevant_ids": [
+          "resource_001",
+          "resource_002",
+          "location_001",
+          "location_002",
+          "location_003",
+          "location_004",
+          "location_005",
+          "location_006",
+          "location_007",
+          "location_008",
+          "location_009",
+          "location_010",
+          "location_011",
+          "location_012",
+          "location_013",
+          "location_014",
+          "faction_001",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "region_002",
+        "name": "Лабиринт Мшистых Изгородей",
+        "role": "Зона пространственных головоломок",
+        "biome_or_ecosystem": "Густые заросли на крышах, формирующие узкие коридоры",
+        "climate": "Влажный, с частыми каплями конденсата",
+        "environmental_hazards": [
+          "Узкие проходы",
+          "Ложные пути",
+          "Теневые ловушки"
+        ],
+        "geographical_function": "Проверка навыка планирования на несколько ходов вперёд",
+        "resources": [
+          "resource_002",
+          "resource_003"
+        ],
+        "locations": [
+          "location_015",
+          "location_016",
+          "location_017",
+          "location_018",
+          "location_019",
+          "location_020",
+          "location_021",
+          "location_022",
+          "location_023",
+          "location_024",
+          "location_025",
+          "location_026",
+          "location_027",
+          "location_028"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "cultural_identity": "Мистика запутанных путей, уважение к терпению",
+        "visual_identity": "Тёмно-зелёные изгороди, глубокие тени, контрастное свечение лунок",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Подвижные изгороди",
+          "Изгороди, реагирующие на свет",
+          "Секретные проходы",
+          "Многоуровневые лабиринты"
+        ],
+        "relevant_ids": [
+          "resource_002",
+          "resource_003",
+          "location_015",
+          "location_016",
+          "location_017",
+          "location_018",
+          "location_019",
+          "location_020",
+          "location_021",
+          "location_022",
+          "location_023",
+          "location_024",
+          "location_025",
+          "location_026",
+          "location_027",
+          "location_028",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "region_003",
+        "name": "Террасы Ночной Росы",
+        "role": "Зона продвинутой логики и комбо",
+        "biome_or_ecosystem": "Многоярусные крыши с перепадами высот и водостоками",
+        "climate": "Прохладный, с обильной росой",
+        "environmental_hazards": [
+          "Скользкие поверхности",
+          "Ограниченные ресурсы отмотки"
+        ],
+        "geographical_function": "Обучение использованию скольжения и цепных реакций",
+        "resources": [
+          "resource_001",
+          "resource_003",
+          "resource_004"
+        ],
+        "locations": [
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "cultural_identity": "Изящество и точность движений, гармония с водой",
+        "visual_identity": "Серебристые отражения, синие тона воды, яркие акценты целей",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Водные потоки, сдвигающие горшки",
+          "Испаряющиеся лунки",
+          "Отражающие поверхности",
+          "Террасы с временными мостами"
+        ],
+        "relevant_ids": [
+          "resource_001",
+          "resource_003",
+          "resource_004",
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "region_004",
+        "name": "Сланцевые Переходы",
+        "role": "Зона жёстких ограничений и точности",
+        "biome_or_ecosystem": "Гладкие, скользкие и тёмные сланцевые крыши",
+        "climate": "Ветреный, холодный, минимальное освещение",
+        "environmental_hazards": [
+          "Скользкая черепица",
+          "Обрывы",
+          "Строгие лимиты ходов"
+        ],
+        "geographical_function": "Проверка мастерства управления инерцией и точности",
+        "resources": [
+          "resource_002",
+          "resource_005"
+        ],
+        "locations": [
+          "location_043",
+          "location_044",
+          "location_045",
+          "location_046",
+          "location_047",
+          "location_048",
+          "location_049",
+          "location_050",
+          "location_051",
+          "location_052",
+          "location_053",
+          "location_054",
+          "location_055",
+          "location_056"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ],
+        "cultural_identity": "Аскетизм, строгость, выживание через точный расчёт",
+        "visual_identity": "Тёмно-серый сланец, резкие тени, минимальное янтарное свечение",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Ветер, сдвигающий горшки",
+          "Хрупкий сланец",
+          "Скрытые люки",
+          "Зеркальные отражения путей"
+        ],
+        "relevant_ids": [
+          "resource_002",
+          "resource_005",
+          "location_043",
+          "location_044",
+          "location_045",
+          "location_046",
+          "location_047",
+          "location_048",
+          "location_049",
+          "location_050",
+          "location_051",
+          "location_052",
+          "location_053",
+          "location_054",
+          "location_055",
+          "location_056",
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "region_005",
+        "name": "Круг Вечного Света",
+        "role": "Финальная зона мастерства",
+        "biome_or_ecosystem": "Центральная площадь с древними механизмами и идеальной симметрией",
+        "climate": "Ясная ночь, яркое лунное и искусственное освещение",
+        "environmental_hazards": [
+          "Комбинированные ограничения",
+          "Максимальная сложность раскладов"
+        ],
+        "geographical_function": "Синтез всех механик в сложных, элегантных головоломках",
+        "resources": [
+          "resource_001",
+          "resource_002",
+          "resource_003",
+          "resource_004"
+        ],
+        "locations": [
+          "location_057",
+          "location_058",
+          "location_059",
+          "location_060",
+          "location_061",
+          "location_062",
+          "location_063",
+          "location_064",
+          "location_065",
+          "location_066",
+          "location_067",
+          "location_068",
+          "location_069",
+          "location_070"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ],
+        "cultural_identity": "Высшее мастерство фонарщиков, гармония всех сил",
+        "visual_identity": "Идеальная симметрия, медные акценты, яркое янтарное свечение, сложные узоры",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Глобальные модификаторы поля",
+          "Динамические цели",
+          "Синхронизированные движения",
+          "Финальные испытания на время (ходы)"
+        ],
+        "relevant_ids": [
+          "resource_001",
+          "resource_002",
+          "resource_003",
+          "resource_004",
+          "location_057",
+          "location_058",
+          "location_059",
+          "location_060",
+          "location_061",
+          "location_062",
+          "location_063",
+          "location_064",
+          "location_065",
+          "location_066",
+          "location_067",
+          "location_068",
+          "location_069",
+          "location_070",
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ]
+      }
+    ],
+    "locations": [
+      {
+        "id": "location_001",
+        "name": "Угловая грядка у дымохода",
+        "region_id": "region_001",
+        "role": "Обучение базовому толчку",
+        "purpose": "Демонстрация перемещения одного горшка на одну лунку",
+        "atmosphere": "Спокойная, уютная, тёплое свечение",
+        "important_features": [
+          "Одинокая лунка",
+          "Прямой коридор"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Нет"
+        ],
+        "visual_identity": "Мшистый кирпич, мягкий свет",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Добавление стены",
+          "Смещение лунки",
+          "Введение второго горшка",
+          "Ограничение ходов"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_002",
+        "name": "Грядка с поворотом",
+        "region_id": "region_001",
+        "role": "Обучение маневрированию",
+        "purpose": "Толчок горшка с изменением направления",
+        "atmosphere": "Немного более сложная, требующая размышления",
+        "important_features": [
+          "Угловая стена",
+          "Две возможные лунки"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Риск загнать горшок в угол"
+        ],
+        "visual_identity": "Мшистый кирпич, тень от стены",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Добавление препятствия",
+          "Изменение угла",
+          "Введение отмотки",
+          "Скрытая лунка"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_003",
+        "name": "Тесный проход между трубами",
+        "region_id": "region_001",
+        "role": "Контроль пространства",
+        "purpose": "Проталкивание горшка через узкий коридор",
+        "atmosphere": "Стеснённая, требующая точности",
+        "important_features": [
+          "Узкий коридор шириной в 1 клетку",
+          "Трубы по бокам"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность разворота"
+        ],
+        "visual_identity": "Кирпичные стены, тёмные трубы",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Удлинение коридора",
+          "Добавление поворота",
+          "Введение скольжения",
+          "Подвижная труба"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_004",
+        "name": "Первая теневая ловушка",
+        "region_id": "region_001",
+        "role": "Знакомство с опасностью",
+        "purpose": "Избегание загонения горшка в тупик",
+        "atmosphere": "Напряжённая, предупреждающая",
+        "important_features": [
+          "Углубление в стене",
+          "Предупреждающий световой след"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Мёртвый угол при неправильном толчке"
+        ],
+        "visual_identity": "Резкий переход от света к тени",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Добавление второго тупика",
+          "Иллюзия тупика",
+          "Отмотка как спасение",
+          "Динамическая тень"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_005",
+        "name": "Грядка на хрупком мху",
+        "region_id": "region_001",
+        "role": "Введение новой механики",
+        "purpose": "Использование клетки, которая меняется после прохода",
+        "atmosphere": "Хрупкая, требующая планирования маршрута",
+        "important_features": [
+          "Клетка мха, меняющая цвет"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_003",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Потеря проходимости после шага"
+        ],
+        "visual_identity": "Ярко-зелёный мох, темнеющий после активации",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Цепочка мха",
+          "Восстанавливающийся мох",
+          "Мох под горшком",
+          "Мох-ловушка"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "faction_001",
+          "faction_003",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_006",
+        "name": "Скользкий скат крыши",
+        "region_id": "region_001",
+        "role": "Введение инерции",
+        "purpose": "Демонстрация автоматического движения до препятствия",
+        "atmosphere": "Динамичная, требующая расчёта остановки",
+        "important_features": [
+          "Гладкая черепица",
+          "Упор в конце"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Неконтролируемое движение в пропасть"
+        ],
+        "visual_identity": "Блестящая поверхность, следы скольжения",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Изменение направления скольжения",
+          "Скольжение только для горшков",
+          "Прерывистое скольжение",
+          "Скольжение с поворотом"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_007",
+        "name": "Двойная лунка",
+        "region_id": "region_001",
+        "role": "Усложнение цели",
+        "purpose": "Расстановка двух горшков на две лунки",
+        "atmosphere": "Головоломная, требующая последовательности",
+        "important_features": [
+          "Две лунки рядом",
+          "Два горшка"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Блокировка одной лунки другим горшком"
+        ],
+        "visual_identity": "Парные светящиеся круги",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Три лунки",
+          "Лунки с приоритетом",
+          "Лунки, меняющие места",
+          "Лунки-переключатели"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_008",
+        "name": "Грядка с ограничением ходов",
+        "region_id": "region_001",
+        "role": "Введение ресурсного давления",
+        "purpose": "Решение головоломки за минимальное число шагов",
+        "atmosphere": "Срочная, требующая оптимального пути",
+        "important_features": [
+          "Счётчик ходов на интерфейсе"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Провал при превышении лимита"
+        ],
+        "visual_identity": "Пульсирующий интерфейс, напряжённый свет",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Жёсткий лимит",
+          "Лимит только на толчки",
+          "Бонус за экономию",
+          "Динамический лимит"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_009",
+        "name": "Тест отмотки света",
+        "region_id": "region_001",
+        "role": "Обучение коррекции ошибок",
+        "purpose": "Совершение ошибки и её исправление через отмотку",
+        "atmosphere": "Экспериментальная, прощающая",
+        "important_features": [
+          "Световой след после отмотки"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Потеря токена отмотки"
+        ],
+        "visual_identity": "Призрачный след на сетке, мягкий звук",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Двойная отмотка",
+          "Отмотка с бонусом",
+          "Ограниченная зона отмотки",
+          "Отмотка, меняющая поле"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_010",
+        "name": "Комбинированная грядка",
+        "region_id": "region_001",
+        "role": "Синтез базовых механик",
+        "purpose": "Использование скольжения и мха в одном уровне",
+        "atmosphere": "Сложная, требующая комплексного подхода",
+        "important_features": [
+          "Зоны мха и скольжения"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Взаимодействие механик может создать тупик"
+        ],
+        "visual_identity": "Контраст зелёного мха и блестящего сланца",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Цепная реакция",
+          "Последовательная активация",
+          "Взаимоисключающие пути",
+          "Скрытая комбинация"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006",
+          "faction_001",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_011",
+        "name": "Грядка у старого водостока",
+        "region_id": "region_001",
+        "role": "Вариация окружения",
+        "purpose": "Навигация вокруг статичного препятствия",
+        "atmosphere": "Рутинная, но требующая внимания",
+        "important_features": [
+          "Изогнутый водосток"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Ограничение манёвренности"
+        ],
+        "visual_identity": "Медные элементы, зелёная патина",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Подвижный водосток",
+          "Водосток как цель",
+          "Разрушаемый водосток",
+          "Водосток-тоннель"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_012",
+        "name": "Теневой коридор",
+        "region_id": "region_001",
+        "role": "Усиление давления тени",
+        "purpose": "Прохождение через длинную тёмную зону",
+        "atmosphere": "Мрачная, давящая",
+        "important_features": [
+          "Длинный ряд теневых клеток"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Потеря ориентации",
+          "Скрытые стены"
+        ],
+        "visual_identity": "Почти полное отсутствие света, кроме горшка",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Движущиеся тени",
+          "Тени, сужающие проход",
+          "Светящиеся метки",
+          "Теневые монстры (статичные)"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_013",
+        "name": "Грядка с подсказкой",
+        "region_id": "region_001",
+        "role": "Демонстрация системы помощи",
+        "purpose": "Использование подсказки для нахождения первого хода",
+        "atmosphere": "Обучающая, поддерживающая",
+        "important_features": [
+          "Кнопка подсказки",
+          "Световая стрелка"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Трата ресурса подсказки"
+        ],
+        "visual_identity": "Яркая стрелка, указывающая направление",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Частичная подсказка",
+          "Подсказка за валюту",
+          "Подсказка, открывающая секрет",
+          "Автоматическая подсказка при бездействии"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_014",
+        "name": "Финальная грядка сада",
+        "region_id": "region_001",
+        "role": "Проверка усвоения основ",
+        "purpose": "Самостоятельное решение без подсказок",
+        "atmosphere": "Торжественная, завершающая этап",
+        "important_features": [
+          "Все элементы в балансе"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Идеальный тупик при одном неверном шаге"
+        ],
+        "visual_identity": "Яркое свечение всех лунок при победе",
+        "palette_family": "mossy_brick",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_001",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_015",
+        "name": "Вход в лабиринт изгородей",
+        "region_id": "region_002",
+        "role": "Знакомство с узкими проходами",
+        "purpose": "Навигация в ограниченном пространстве",
+        "atmosphere": "Загадочная, запутанная",
+        "important_features": [
+          "Высокие изгороди",
+          "Тупики"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Ложные пути"
+        ],
+        "visual_identity": "Тёмно-зелёные стены, узкие просветы",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Изменение конфигурации изгородей",
+          "Подвижные изгороди",
+          "Изгороди, реагирующие на свет",
+          "Секретные проходы"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_016",
+        "name": "Перекрёсток теней",
+        "region_id": "region_002",
+        "role": "Выбор пути",
+        "purpose": "Определение правильного направления на перекрёстке",
+        "atmosphere": "Неоднозначная, требующая анализа",
+        "important_features": [
+          "Четыре возможных пути",
+          "Один верный"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Возврат в начало при ошибке"
+        ],
+        "visual_identity": "Пересекающиеся тени, слабое свечение",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Динамические перекрёстки",
+          "Перекрёстки с ловушками",
+          "Скрытые указатели",
+          "Перекрёстки, меняющие путь"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_017",
+        "name": "Тупиковая ветвь",
+        "region_id": "region_002",
+        "role": "Наказание за ошибку",
+        "purpose": "Демонстрация необходимости отмотки или перезапуска",
+        "atmosphere": "Безысходная, предупреждающая",
+        "important_features": [
+          "Мёртвый конец",
+          "Горшок в углу"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность решения без отмотки"
+        ],
+        "visual_identity": "Сгущающаяся тень, отсутствие свечения лунок",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Тупик с секретом",
+          "Тупик, требующий жертвы",
+          "Тупик с модификатором",
+          "Тупик, меняющий правила"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_018",
+        "name": "Зигзаг между кустами",
+        "region_id": "region_002",
+        "role": "Тренировка маневрирования",
+        "purpose": "Серия последовательных поворотов при толкании",
+        "atmosphere": "Ритмичная, требующая точности",
+        "important_features": [
+          "Z-образный путь"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Потеря контроля направления"
+        ],
+        "visual_identity": "Чередование света и тени на поворотах",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Удлинение зигзага",
+          "Зигзаг с препятствиями",
+          "Зигзаг на скользкой поверхности",
+          "Зигзаг с таймером"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_019",
+        "name": "Комната с двумя горшками",
+        "region_id": "region_002",
+        "role": "Усложнение взаимодействия",
+        "purpose": "Координация перемещения двух объектов",
+        "atmosphere": "Головоломная, требующая планирования",
+        "important_features": [
+          "Два горшка",
+          "Две лунки",
+          "Ограниченное пространство"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Блокировка друг друга"
+        ],
+        "visual_identity": "Двойное свечение, перекрывающиеся тени",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Три горшка",
+          "Горшки разных типов",
+          "Горшки, притягивающие друг друга",
+          "Горшки, отталкивающие друг друга"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_020",
+        "name": "Лабиринт с откатом",
+        "region_id": "region_002",
+        "role": "Интеграция отмотки в сложную среду",
+        "purpose": "Использование отмотки для коррекции пути в лабиринте",
+        "atmosphere": "Экспериментальная, требующая проб и ошибок",
+        "important_features": [
+          "Световые следы на поворотах"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Исчерпание отмотки в середине пути"
+        ],
+        "visual_identity": "Множественные призрачные следы",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Ограниченная зона отмотки",
+          "Отмотка, открывающая путь",
+          "Отмотка, меняющая лабиринт",
+          "Бесконечная отмотка с штрафом"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_021",
+        "name": "Скрытая лунка",
+        "region_id": "region_002",
+        "role": "Введение элемента исследования",
+        "purpose": "Поиск неочевидной цели",
+        "atmosphere": "Таинственная, поощряющая любопытство",
+        "important_features": [
+          "Лунка, видимая только при определённом угле"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Пропуск цели и застревание"
+        ],
+        "visual_identity": "Слабое мерцание, скрытое за стеной",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Движущиеся скрытые лунки",
+          "Лунки, требующие активации",
+          "Лунки-иллюзии",
+          "Лунки, видимые только после отмотки"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_022",
+        "name": "Узкий мост над пропастью",
+        "region_id": "region_002",
+        "role": "Повышение ставок",
+        "purpose": "Точное перемещение без права на ошибку",
+        "atmosphere": "Напряжённая, опасная",
+        "important_features": [
+          "Мост шириной в 1 клетку",
+          "Пропасть по бокам"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Сброс горшка при неправильном толчке"
+        ],
+        "visual_identity": "Тёмная пустота по краям, узкая светлая полоса",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Разрушающийся мост",
+          "Мост с ветром",
+          "Мост, меняющий направление",
+          "Мост с подвижными секциями"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_023",
+        "name": "Переплетение путей",
+        "region_id": "region_002",
+        "role": "Сложная координация",
+        "purpose": "Решение головоломки с пересекающимися маршрутами",
+        "atmosphere": "Запутанная, требующая абстрактного мышления",
+        "important_features": [
+          "Пересекающиеся коридоры"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Блокировка собственного пути"
+        ],
+        "visual_identity": "Сетка пересекающихся линий света и тени",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Многоуровневые пересечения",
+          "Пересечения с приоритетом",
+          "Пересечения, меняющие состояние",
+          "Пересечения с ловушками"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_024",
+        "name": "Грядка с ограничением отмотки",
+        "region_id": "region_002",
+        "role": "Ресурсное давление",
+        "purpose": "Решение головоломки с жёстким лимитом отмотки",
+        "atmosphere": "Стрессовая, требующая уверенности",
+        "important_features": [
+          "Счётчик отмотки на нуле или единице"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность исправить критическую ошибку"
+        ],
+        "visual_identity": "Мигающий индикатор отмотки, тусклый свет",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Нулевая отмотка",
+          "Отмотка, восстанавливающаяся за ходы",
+          "Отмотка, стоящая валюту",
+          "Отмотка, меняющая поле"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_025",
+        "name": "Теневой лабиринт",
+        "region_id": "region_002",
+        "role": "Максимальное использование тени",
+        "purpose": "Навигация в среде, где большинство клеток — тень",
+        "atmosphere": "Мрачная, подавляющая",
+        "important_features": [
+          "Минимум видимых стен",
+          "Ориентация по памяти"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Полная потеря ориентации"
+        ],
+        "visual_identity": "Почти чёрный фон, только горшок и лунка светятся",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Лабиринт, меняющийся в темноте",
+          "Лабиринт с эхом",
+          "Лабиринт, требующий света",
+          "Лабиринт с невидимыми стенами"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_026",
+        "name": "Комната с подсказкой-ловушкой",
+        "region_id": "region_002",
+        "role": "Проверка критического мышления",
+        "purpose": "Игнорирование ложной подсказки",
+        "atmosphere": "Обманчивая, требующая недоверия",
+        "important_features": [
+          "Подсказка, ведущая в тупик"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Слепое следование подсказке ведёт к провалу"
+        ],
+        "visual_identity": "Яркая, но фальшивая световая стрелка",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Множественные ложные подсказки",
+          "Подсказки, меняющие местами",
+          "Подсказки, требующие расшифровки",
+          "Подсказки, активирующие ловушки"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_027",
+        "name": "Последний поворот лабиринта",
+        "region_id": "region_002",
+        "role": "Финальная проверка региона",
+        "purpose": "Синтез всех механик лабиринта",
+        "atmosphere": "Сложная, требующая мастерства",
+        "important_features": [
+          "Комбинация узких проходов, теней и отмотки"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Идеальный тупик при малейшей ошибке"
+        ],
+        "visual_identity": "Сложный узор света и тени",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_028",
+        "name": "Выход из лабиринта",
+        "region_id": "region_002",
+        "role": "Завершение этапа",
+        "purpose": "Простое, но элегантное решение после сложного пути",
+        "atmosphere": "Облегчающая, торжественная",
+        "important_features": [
+          "Широкий выход",
+          "Яркий свет"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Нет"
+        ],
+        "visual_identity": "Переход от тьмы к яркому янтарному свету",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Секретная комната за выходом",
+          "Бонусные искры за скорость",
+          "Переход к следующему региону",
+          "Сохранение прогресса"
+        ],
+        "relevant_ids": [
+          "region_002",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_029",
+        "name": "Первая терраса с росой",
+        "region_id": "region_003",
+        "role": "Знакомство со скольжением",
+        "purpose": "Демонстрация автоматического движения до упора",
+        "atmosphere": "Свежая, динамичная",
+        "important_features": [
+          "Гладкая поверхность",
+          "Упор в конце"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Неконтролируемое движение"
+        ],
+        "visual_identity": "Блестящая поверхность, капли воды",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Изменение направления скольжения",
+          "Скольжение только для горшков",
+          "Прерывистое скольжение",
+          "Скольжение с поворотом"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_030",
+        "name": "Отражающий бассейн",
+        "region_id": "region_003",
+        "role": "Визуальная вариация скольжения",
+        "purpose": "Использование скольжения с визуальными эффектами",
+        "atmosphere": "Спокойная, зеркальная",
+        "important_features": [
+          "Водная поверхность",
+          "Отражения"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Путаница из-за отражений"
+        ],
+        "visual_identity": "Зеркальная поверхность, искажённые формы",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Подвижные отражения",
+          "Отражения, влияющие на механику",
+          "Исчезающие отражения",
+          "Отражения-ловушки"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_031",
+        "name": "Терраса с цепной реакцией",
+        "region_id": "region_003",
+        "role": "Усложнение скольжения",
+        "purpose": "Толчок одного горшка, который толкает другой",
+        "atmosphere": "Динамичная, требующая расчёта",
+        "important_features": [
+          "Два горшка в линию",
+          "Общий путь скольжения"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Разрыв цепочки при неправильном угле"
+        ],
+        "visual_identity": "Линия движения, подсвеченная заранее",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Три горшка в цепочке",
+          "Цепочка с поворотом",
+          "Цепочка, разрушающая стены",
+          "Цепочка с разными типами горшков"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_032",
+        "name": "Скользкий перекрёсток",
+        "region_id": "region_003",
+        "role": "Выбор направления при скольжении",
+        "purpose": "Остановка на перекрёстке или выбор правильного пути",
+        "atmosphere": "Неоднозначная, требующая точности",
+        "important_features": [
+          "Перекрёсток скользких путей"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Проскальзывание мимо цели"
+        ],
+        "visual_identity": "Пересекающиеся блестящие линии",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Перекрёсток с блокировкой",
+          "Перекрёсток, меняющий направление",
+          "Перекрёсток с ловушками",
+          "Перекрёсток с временными путями"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_033",
+        "name": "Терраса с ограничением скольжения",
+        "region_id": "region_003",
+        "role": "Контроль инерции",
+        "purpose": "Использование скольжения с жёстким лимитом активаций",
+        "atmosphere": "Напряжённая, требующая экономии",
+        "important_features": [
+          "Счётчик скольжений"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Исчерпание лимита скольжения до достижения цели"
+        ],
+        "visual_identity": "Мигающий индикатор скольжения",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Нулевое скольжение",
+          "Скольжение, восстанавливающееся за ходы",
+          "Скольжение, стоящее валюту",
+          "Скольжение, меняющее поле"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_034",
+        "name": "Водосток с течением",
+        "region_id": "region_003",
+        "role": "Введение внешнего фактора",
+        "purpose": "Учёт направления течения при планировании",
+        "atmosphere": "Динамичная, подчинённая стихии",
+        "important_features": [
+          "Направленное течение",
+          "Влияние на движение"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Снос горшка в тупик течением"
+        ],
+        "visual_identity": "Стрелки течения на поверхности",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Изменяющееся течение",
+          "Течение, зависящее от времени",
+          "Течение, создающее волны",
+          "Течение, взаимодействующее с другими элементами"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_035",
+        "name": "Терраса с подвижными платформами",
+        "region_id": "region_003",
+        "role": "Динамическое окружение",
+        "purpose": "Синхронизация движения с движущимися элементами",
+        "atmosphere": "Механическая, требующая тайминга",
+        "important_features": [
+          "Платформы, двигающиеся по расписанию"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Падение с платформы при неправильном тайминге"
+        ],
+        "visual_identity": "Механические шестерни, плавное движение",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Платформы с разной скоростью",
+          "Платформы, меняющие направление",
+          "Платформы, активируемые весом",
+          "Платформы, исчезающие после использования"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_036",
+        "name": "Грядка с отражением света",
+        "region_id": "region_003",
+        "role": "Визуальная головоломка",
+        "purpose": "Использование отражений для активации удалённых целей",
+        "atmosphere": "Магическая, требующая нестандартного мышления",
+        "important_features": [
+          "Зеркальные поверхности",
+          "Лучи света"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Неправильный угол отражения блокирует цель"
+        ],
+        "visual_identity": "Яркие лучи, преломляющиеся на поверхностях",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Подвижные зеркала",
+          "Зеркала, меняющие свойства",
+          "Зеркала, создающие иллюзии",
+          "Зеркала, поглощающие свет"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_037",
+        "name": "Терраса с временными мостами",
+        "region_id": "region_003",
+        "role": "Управление временем",
+        "purpose": "Пересечение мостов, которые появляются и исчезают",
+        "atmosphere": "Срочная, требующая быстрого планирования",
+        "important_features": [
+          "Мосты с таймером"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Падение при исчезновении моста"
+        ],
+        "visual_identity": "Полупрозрачные мосты, мерцающие перед исчезновением",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Мосты с разным временем жизни",
+          "Мосты, активируемые весом",
+          "Мосты, меняющие маршрут",
+          "Мосты, создающие цепные реакции"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_038",
+        "name": "Терраса с комбинированными механиками",
+        "region_id": "region_003",
+        "role": "Синтез механик региона",
+        "purpose": "Использование скольжения, течения и отражений вместе",
+        "atmosphere": "Сложная, требующая глубокого анализа",
+        "important_features": [
+          "Все элементы региона в одном уровне"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Взаимодействие механик может создать непредсказуемый результат"
+        ],
+        "visual_identity": "Сложный узор из света, воды и движения",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_039",
+        "name": "Терраса с ограничением ресурсов",
+        "region_id": "region_003",
+        "role": "Ресурсное давление",
+        "purpose": "Решение головоломки с нехваткой отмотки и ходов",
+        "atmosphere": "Стрессовая, требующая идеального исполнения",
+        "important_features": [
+          "Минимальные ресурсы"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность исправить ошибку"
+        ],
+        "visual_identity": "Тусклый свет, мигающие индикаторы ресурсов",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Нулевые ресурсы",
+          "Ресурсы, восстанавливающиеся за действия",
+          "Ресурсы, стоящие валюту",
+          "Ресурсы, меняющие поле"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_040",
+        "name": "Терраса с секретным путём",
+        "region_id": "region_003",
+        "role": "Поощрение исследования",
+        "purpose": "Поиск неочевидного решения",
+        "atmosphere": "Таинственная, поощряющая любопытство",
+        "important_features": [
+          "Скрытый проход, открываемый действием"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Пропуск секрета и получение меньшего количества наград"
+        ],
+        "visual_identity": "Слабое свечение в неожиданном месте",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Секретные пути, требующие комбинаций",
+          "Секретные пути, меняющиеся при каждом прохождении",
+          "Секретные пути, ведущие к бонусам",
+          "Секретные пути, меняющие правила"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_041",
+        "name": "Терраса с динамическими целями",
+        "region_id": "region_003",
+        "role": "Усложнение валидации",
+        "purpose": "Активация целей, которые меняют положение или состояние",
+        "atmosphere": "Непредсказуемая, требующая адаптации",
+        "important_features": [
+          "Цели, перемещающиеся после активации"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Активация цели в неправильном порядке блокирует уровень"
+        ],
+        "visual_identity": "Цели, меняющие цвет или положение",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Цели, перемещающиеся по расписанию",
+          "Цели, активируемые только определёнными горшками",
+          "Цели, создающие цепные реакции",
+          "Цели, исчезающие после активации"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_042",
+        "name": "Финальная терраса",
+        "region_id": "region_003",
+        "role": "Завершение этапа",
+        "purpose": "Синтез всех механик региона в элегантном решении",
+        "atmosphere": "Торжественная, требующая мастерства",
+        "important_features": [
+          "Идеальный баланс всех элементов"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Идеальный тупик при малейшей ошибке"
+        ],
+        "visual_identity": "Яркое свечение, сложные узоры, гармония элементов",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_003",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_006",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_043",
+        "name": "Вход в сланцевые переходы",
+        "region_id": "region_004",
+        "role": "Знакомство с жёсткими ограничениями",
+        "purpose": "Демонстрация строгих лимитов ходов",
+        "atmosphere": "Строгая, аскетичная",
+        "important_features": [
+          "Жёсткий счётчик ходов",
+          "Гладкие стены"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Провал при превышении лимита"
+        ],
+        "visual_identity": "Тёмно-серый сланец, минимальное освещение",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Ужесточение лимитов",
+          "Лимиты, зависящие от действий",
+          "Лимиты, меняющиеся со временем",
+          "Лимиты, влияющие на окружение"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_044",
+        "name": "Переход с ветром",
+        "region_id": "region_004",
+        "role": "Введение внешнего фактора",
+        "purpose": "Учёт направления ветра при планировании",
+        "atmosphere": "Холодная, динамичная",
+        "important_features": [
+          "Направленный ветер",
+          "Влияние на движение"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Снос горшка в тупик ветром"
+        ],
+        "visual_identity": "Визуальные потоки ветра, искривлённые формы",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Изменяющийся ветер",
+          "Ветер, зависящий от времени",
+          "Ветер, создающий вихри",
+          "Ветер, взаимодействующий с другими элементами"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_045",
+        "name": "Сланцевый тупик",
+        "region_id": "region_004",
+        "role": "Наказание за ошибку",
+        "purpose": "Демонстрация необходимости точного расчёта",
+        "atmosphere": "Безысходная, предупреждающая",
+        "important_features": [
+          "Мёртвый конец",
+          "Горшок в углу"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность решения без отмотки"
+        ],
+        "visual_identity": "Сгущающаяся тень, отсутствие свечения лунок",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Тупик с секретом",
+          "Тупик, требующий жертвы",
+          "Тупик с модификатором",
+          "Тупик, меняющий правила"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_046",
+        "name": "Переход с хрупким сланцем",
+        "region_id": "region_004",
+        "role": "Усложнение окружения",
+        "purpose": "Использование клеток, которые разрушаются после прохода",
+        "atmosphere": "Опасная, требующая планирования",
+        "important_features": [
+          "Хрупкие клетки, меняющие цвет"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Потеря проходимости после шага"
+        ],
+        "visual_identity": "Трескающийся сланец, темнеющий после активации",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Цепочка хрупкого сланца",
+          "Восстанавливающийся сланец",
+          "Сланец под горшком",
+          "Сланец-ловушка"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_047",
+        "name": "Переход с ограничением отмотки",
+        "region_id": "region_004",
+        "role": "Ресурсное давление",
+        "purpose": "Решение головоломки с жёстким лимитом отмотки",
+        "atmosphere": "Стрессовая, требующая уверенности",
+        "important_features": [
+          "Счётчик отмотки на нуле или единице"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность исправить критическую ошибку"
+        ],
+        "visual_identity": "Мигающий индикатор отмотки, тусклый свет",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Нулевая отмотка",
+          "Отмотка, восстанавливающаяся за ходы",
+          "Отмотка, стоящая валюту",
+          "Отмотка, меняющая поле"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_048",
+        "name": "Сланцевый лабиринт",
+        "region_id": "region_004",
+        "role": "Максимальное использование ограничений",
+        "purpose": "Навигация в среде с минимальными ресурсами и жёсткими стенами",
+        "atmosphere": "Мрачная, подавляющая",
+        "important_features": [
+          "Минимум видимых путей",
+          "Ориентация по памяти"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Полная потеря ориентации"
+        ],
+        "visual_identity": "Почти чёрный фон, только горшок и лунка светятся",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Лабиринт, меняющийся в темноте",
+          "Лабиринт с эхом",
+          "Лабиринт, требующий света",
+          "Лабиринт с невидимыми стенами"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_049",
+        "name": "Переход с подвижными стенами",
+        "region_id": "region_004",
+        "role": "Динамическое окружение",
+        "purpose": "Синхронизация движения с движущимися элементами",
+        "atmosphere": "Механическая, требующая тайминга",
+        "important_features": [
+          "Стены, двигающиеся по расписанию"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Задавливание горшка при неправильном тайминге"
+        ],
+        "visual_identity": "Механические шестерни, плавное движение стен",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Стены с разной скоростью",
+          "Стены, меняющие направление",
+          "Стены, активируемые весом",
+          "Стены, исчезающие после использования"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_050",
+        "name": "Переход с комбинированными механиками",
+        "region_id": "region_004",
+        "role": "Синтез механик региона",
+        "purpose": "Использование ветра, хрупкого сланца и ограничений вместе",
+        "atmosphere": "Сложная, требующая глубокого анализа",
+        "important_features": [
+          "Все элементы региона в одном уровне"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Взаимодействие механик может создать непредсказуемый результат"
+        ],
+        "visual_identity": "Сложный узор из тьмы, ветра и движения",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_051",
+        "name": "Переход с ограничением ресурсов",
+        "region_id": "region_004",
+        "role": "Ресурсное давление",
+        "purpose": "Решение головоломки с нехваткой отмотки и ходов",
+        "atmosphere": "Стрессовая, требующая идеального исполнения",
+        "important_features": [
+          "Минимальные ресурсы"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность исправить ошибку"
+        ],
+        "visual_identity": "Тусклый свет, мигающие индикаторы ресурсов",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Нулевые ресурсы",
+          "Ресурсы, восстанавливающиеся за действия",
+          "Ресурсы, стоящие валюту",
+          "Ресурсы, меняющие поле"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_052",
+        "name": "Переход с секретным путём",
+        "region_id": "region_004",
+        "role": "Поощрение исследования",
+        "purpose": "Поиск неочевидного решения",
+        "atmosphere": "Таинственная, поощряющая любопытство",
+        "important_features": [
+          "Скрытый проход, открываемый действием"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Пропуск секрета и получение меньшего количества наград"
+        ],
+        "visual_identity": "Слабое свечение в неожиданном месте",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Секретные пути, требующие комбинаций",
+          "Секретные пути, меняющиеся при каждом прохождении",
+          "Секретные пути, ведущие к бонусам",
+          "Секретные пути, меняющие правила"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_053",
+        "name": "Переход с динамическими целями",
+        "region_id": "region_004",
+        "role": "Усложнение валидации",
+        "purpose": "Активация целей, которые меняют положение или состояние",
+        "atmosphere": "Непредсказуемая, требующая адаптации",
+        "important_features": [
+          "Цели, перемещающиеся после активации"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Активация цели в неправильном порядке блокирует уровень"
+        ],
+        "visual_identity": "Цели, меняющие цвет или положение",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Цели, перемещающиеся по расписанию",
+          "Цели, активируемые только определёнными горшками",
+          "Цели, создающие цепные реакции",
+          "Цели, исчезающие после активации"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_054",
+        "name": "Переход с зеркальными отражениями",
+        "region_id": "region_004",
+        "role": "Визуальная головоломка",
+        "purpose": "Использование отражений для активации удалённых целей",
+        "atmosphere": "Магическая, требующая нестандартного мышления",
+        "important_features": [
+          "Зеркальные поверхности",
+          "Лучи света"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Неправильный угол отражения блокирует цель"
+        ],
+        "visual_identity": "Яркие лучи, преломляющиеся на поверхностях",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Подвижные зеркала",
+          "Зеркала, меняющие свойства",
+          "Зеркала, создающие иллюзии",
+          "Зеркала, поглощающие свет"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_055",
+        "name": "Переход с временными мостами",
+        "region_id": "region_004",
+        "role": "Управление временем",
+        "purpose": "Пересечение мостов, которые появляются и исчезают",
+        "atmosphere": "Срочная, требующая быстрого планирования",
+        "important_features": [
+          "Мосты с таймером"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Падение при исчезновении моста"
+        ],
+        "visual_identity": "Полупрозрачные мосты, мерцающие перед исчезновением",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Мосты с разным временем жизни",
+          "Мосты, активируемые весом",
+          "Мосты, меняющие маршрут",
+          "Мосты, создающие цепные реакции"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_056",
+        "name": "Финальный переход",
+        "region_id": "region_004",
+        "role": "Завершение этапа",
+        "purpose": "Синтез всех механик региона в элегантном решении",
+        "atmosphere": "Торжественная, требующая мастерства",
+        "important_features": [
+          "Идеальный баланс всех элементов"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Идеальный тупик при малейшей ошибке"
+        ],
+        "visual_identity": "Сложный узор из тьмы и света, гармония элементов",
+        "palette_family": "wet_slate",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_004",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_002",
+          "faction_003",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_057",
+        "name": "Вход в круг вечного света",
+        "region_id": "region_005",
+        "role": "Знакомство с высшей сложностью",
+        "purpose": "Демонстрация идеальной симметрии и строгих правил",
+        "atmosphere": "Величественная, строгая",
+        "important_features": [
+          "Симметричный расклад",
+          "Все типы механик"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Малейшая ошибка ведёт к тупику"
+        ],
+        "visual_identity": "Идеальная симметрия, медные акценты, яркое янтарное свечение",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Усложнение симметрии",
+          "Добавление асимметричных элементов",
+          "Изменение правил симметрии",
+          "Симметрия, влияющая на ресурсы"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006",
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_058",
+        "name": "Грядка с глобальным модификатором",
+        "region_id": "region_005",
+        "role": "Введение мета-механик",
+        "purpose": "Решение головоломки с изменёнными правилами",
+        "atmosphere": "Необычная, требующая переосмысления",
+        "important_features": [
+          "Активный модификатор, меняющий механику"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Непонимание модификатора ведёт к провалу"
+        ],
+        "visual_identity": "Искажённые формы, необычные цвета",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Модификаторы, меняющиеся со временем",
+          "Модификаторы, зависящие от действий",
+          "Модификаторы, создающие цепные реакции",
+          "Модификаторы, влияющие на окружение"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_059",
+        "name": "Грядка с динамическими целями",
+        "region_id": "region_005",
+        "role": "Усложнение валидации",
+        "purpose": "Активация целей, которые меняют положение или состояние",
+        "atmosphere": "Непредсказуемая, требующая адаптации",
+        "important_features": [
+          "Цели, перемещающиеся после активации"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Активация цели в неправильном порядке блокирует уровень"
+        ],
+        "visual_identity": "Цели, меняющие цвет или положение",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Цели, перемещающиеся по расписанию",
+          "Цели, активируемые только определёнными горшками",
+          "Цели, создающие цепные реакции",
+          "Цели, исчезающие после активации"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_060",
+        "name": "Грядка с синхронизированными движениями",
+        "region_id": "region_005",
+        "role": "Высшая координация",
+        "purpose": "Управление несколькими объектами одновременно",
+        "atmosphere": "Сложная, требующая абстрактного мышления",
+        "important_features": [
+          "Связанные объекты",
+          "Общие пути"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Дезсинхронизация ведёт к тупику"
+        ],
+        "visual_identity": "Линии связи между объектами",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Три и более связанных объекта",
+          "Связи, меняющие тип",
+          "Связи, разрывающиеся при действии",
+          "Связи, создающие цепные реакции"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_061",
+        "name": "Грядка с ограничением всех ресурсов",
+        "region_id": "region_005",
+        "role": "Максимальное ресурсное давление",
+        "purpose": "Решение головоломки с нехваткой всех ресурсов",
+        "atmosphere": "Экстремальная, требующая идеального исполнения",
+        "important_features": [
+          "Нулевые или минимальные ресурсы"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Невозможность исправить любую ошибку"
+        ],
+        "visual_identity": "Тусклый свет, мигающие индикаторы ресурсов",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Абсолютный ноль ресурсов",
+          "Ресурсы, восстанавливающиеся за идеальные действия",
+          "Ресурсы, стоящие огромную валюту",
+          "Ресурсы, меняющие поле радикально"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_062",
+        "name": "Грядка с секретным путём",
+        "region_id": "region_005",
+        "role": "Поощрение мастерства",
+        "purpose": "Поиск неочевидного решения, требующего глубокого понимания механик",
+        "atmosphere": "Таинственная, поощряющая любопытство",
+        "important_features": [
+          "Скрытый проход, открываемый сложной комбинацией"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Пропуск секрета и получение меньшего количества наград"
+        ],
+        "visual_identity": "Слабое свечение в неожиданном месте, требующее специфического действия",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Секретные пути, требующие сложных комбинаций",
+          "Секретные пути, меняющиеся при каждом прохождении",
+          "Секретные пути, ведущие к уникальным бонусам",
+          "Секретные пути, меняющие правила игры"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_063",
+        "name": "Грядка с финальными испытаниями",
+        "region_id": "region_005",
+        "role": "Проверка полного мастерства",
+        "purpose": "Синтез всех механик игры в одном уровне",
+        "atmosphere": "Эпическая, требующая максимального напряжения",
+        "important_features": [
+          "Все механики игры в одном уровне"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Идеальный тупик при малейшей ошибке"
+        ],
+        "visual_identity": "Сложный узор из всех элементов, гармония и хаос",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление уникального модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006",
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_064",
+        "name": "Грядка с временными аномалиями",
+        "region_id": "region_005",
+        "role": "Усложнение управления временем",
+        "purpose": "Решение головоломки с изменяющимися во времени правилами",
+        "atmosphere": "Нестабильная, требующая быстрой адаптации",
+        "important_features": [
+          "Правила, меняющиеся каждые несколько ходов"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Непредсказуемость изменений"
+        ],
+        "visual_identity": "Мерцающие элементы, искажённое время",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Аномалии, зависящие от действий",
+          "Аномалии, создающие цепные реакции",
+          "Аномалии, влияющие на ресурсы",
+          "Аномалии, меняющие окружение"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_065",
+        "name": "Грядка с иллюзиями",
+        "region_id": "region_005",
+        "role": "Проверка восприятия",
+        "purpose": "Отличие реальных элементов от иллюзорных",
+        "atmosphere": "Обманчивая, требующая критического мышления",
+        "important_features": [
+          "Фальшивые стены, лунки или горшки"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Взаимодействие с иллюзией ведёт к провалу"
+        ],
+        "visual_identity": "Полупрозрачные или искажённые элементы",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Иллюзии, меняющиеся при действии",
+          "Иллюзии, зависящие от угла зрения",
+          "Иллюзии, создающие цепные реакции",
+          "Иллюзии, влияющие на ресурсы"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_002",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_066",
+        "name": "Грядка с цепными реакциями",
+        "region_id": "region_005",
+        "role": "Усложнение взаимодействий",
+        "purpose": "Запуск последовательности событий одним действием",
+        "atmosphere": "Динамичная, требующая предвидения",
+        "important_features": [
+          "Элементы, реагирующие на активацию друг друга"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004"
+        ],
+        "secrets_or_dangers": [
+          "Неправильный запуск блокирует уровень"
+        ],
+        "visual_identity": "Яркие вспышки, последовательные активации",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Цепные реакции, меняющие тип",
+          "Цепные реакции, разрывающиеся при действии",
+          "Цепные реакции, создающие новые элементы",
+          "Цепные реакции, влияющие на ресурсы"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004"
+        ]
+      },
+      {
+        "id": "location_067",
+        "name": "Грядка с меняющимися правилами",
+        "region_id": "region_005",
+        "role": "Высшая адаптация",
+        "purpose": "Решение головоломки, где правила меняются в процессе",
+        "atmosphere": "Хаотичная, требующая гибкости",
+        "important_features": [
+          "Правила, меняющиеся при определённых условиях"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Непонимание новых правил ведёт к провалу"
+        ],
+        "visual_identity": "Изменяющиеся символы, трансформирующиеся элементы",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Правила, зависящие от действий",
+          "Правила, создающие цепные реакции",
+          "Правила, влияющие на ресурсы",
+          "Правила, меняющие окружение"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_068",
+        "name": "Грядка с финальным выбором",
+        "region_id": "region_005",
+        "role": "Моральная/стратегическая дилемма",
+        "purpose": "Выбор между двумя путями решения с разными последствиями",
+        "atmosphere": "Ответственная, требующая взвешенного решения",
+        "important_features": [
+          "Два возможных решения с разными наградами"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Выбор менее оптимального пути"
+        ],
+        "visual_identity": "Разделённые пути, разные цветовые акценты",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Выбор, влияющий на следующие уровни",
+          "Выбор, меняющий правила",
+          "Выбор, создающий цепные реакции",
+          "Выбор, влияющий на ресурсы"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_069",
+        "name": "Грядка с идеальным решением",
+        "region_id": "region_005",
+        "role": "Демонстрация мастерства",
+        "purpose": "Решение головоломки единственным идеальным способом",
+        "atmosphere": "Элегантная, требующая безупречности",
+        "important_features": [
+          "Только один правильный путь"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Любое отклонение ведёт к провалу"
+        ],
+        "visual_identity": "Чистые линии, идеальный баланс, яркое свечение",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Усложнение идеального пути",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "faction_001",
+          "faction_004",
+          "faction_005"
+        ]
+      },
+      {
+        "id": "location_070",
+        "name": "Финальная грядка круга",
+        "region_id": "region_005",
+        "role": "Завершение игры",
+        "purpose": "Последняя головоломка, синтезирующая весь опыт",
+        "atmosphere": "Торжественная, завершающая, просветлённая",
+        "important_features": [
+          "Все механики в идеальном балансе",
+          "Финальная цель"
+        ],
+        "entities": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006"
+        ],
+        "factions": [
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ],
+        "secrets_or_dangers": [
+          "Последний шанс на ошибку"
+        ],
+        "visual_identity": "Ослепительный свет, сложные узоры, полная гармония",
+        "palette_family": "copper_trim",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "region_005",
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "entity_005",
+          "entity_006",
+          "faction_001",
+          "faction_002",
+          "faction_003",
+          "faction_004",
+          "faction_005"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "id": "entity_001",
+        "name": "Фонарщик-садовник",
+        "entity_type": "player",
+        "role": "Управляемый персонаж, толкающий горшки",
+        "behavior_or_ai_logic": "Движется по сетке в направлении ввода, толкает горшки, не может тянуть",
+        "habitat_or_presence": [
+          "location_001",
+          "location_002",
+          "location_003",
+          "location_004",
+          "location_005",
+          "location_006",
+          "location_007",
+          "location_008",
+          "location_009",
+          "location_010",
+          "location_011",
+          "location_012",
+          "location_013",
+          "location_014",
+          "location_015",
+          "location_016",
+          "location_017",
+          "location_018",
+          "location_019",
+          "location_020",
+          "location_021",
+          "location_022",
+          "location_023",
+          "location_024",
+          "location_025",
+          "location_026",
+          "location_027",
+          "location_028",
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042",
+          "location_043",
+          "location_044",
+          "location_045",
+          "location_046",
+          "location_047",
+          "location_048",
+          "location_049",
+          "location_050",
+          "location_051",
+          "location_052",
+          "location_053",
+          "location_054",
+          "location_055",
+          "location_056",
+          "location_057",
+          "location_058",
+          "location_059",
+          "location_060",
+          "location_061",
+          "location_062",
+          "location_063",
+          "location_064",
+          "location_065",
+          "location_066",
+          "location_067",
+          "location_068",
+          "location_069",
+          "location_070"
+        ],
+        "relationships": {
+          "entity_002": "толкает",
+          "entity_004": "активирует"
+        },
+        "resources": [
+          "resource_001",
+          "resource_006"
+        ],
+        "threat_level": "none",
+        "visual_identity": "Минималистичная фигура с янтарным фонарём, тёплое свечение",
+        "expansion_hooks": [
+          "Разные скины фонарщика",
+          "Анимации толчка",
+          "Эффекты при отмотке",
+          "Визуальные следы движения"
+        ],
+        "relevant_ids": [
+          "entity_002",
+          "entity_004",
+          "resource_001",
+          "resource_006"
+        ]
+      },
+      {
+        "id": "entity_002",
+        "name": "Светящийся горшок",
+        "entity_type": "pushable_box",
+        "role": "Основной интерактивный объект",
+        "behavior_or_ai_logic": "Двигается только при толчке игроком, останавливается у стен или других горшков",
+        "habitat_or_presence": [
+          "location_001",
+          "location_002",
+          "location_003",
+          "location_004",
+          "location_005",
+          "location_006",
+          "location_007",
+          "location_008",
+          "location_009",
+          "location_010",
+          "location_011",
+          "location_012",
+          "location_013",
+          "location_014",
+          "location_015",
+          "location_016",
+          "location_017",
+          "location_018",
+          "location_019",
+          "location_020",
+          "location_021",
+          "location_022",
+          "location_023",
+          "location_024",
+          "location_025",
+          "location_026",
+          "location_027",
+          "location_028",
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042",
+          "location_043",
+          "location_044",
+          "location_045",
+          "location_046",
+          "location_047",
+          "location_048",
+          "location_049",
+          "location_050",
+          "location_051",
+          "location_052",
+          "location_053",
+          "location_054",
+          "location_055",
+          "location_056",
+          "location_057",
+          "location_058",
+          "location_059",
+          "location_060",
+          "location_061",
+          "location_062",
+          "location_063",
+          "location_064",
+          "location_065",
+          "location_066",
+          "location_067",
+          "location_068",
+          "location_069",
+          "location_070"
+        ],
+        "relationships": {
+          "entity_001": "толкается",
+          "entity_004": "активирует"
+        },
+        "resources": [
+          "resource_002"
+        ],
+        "threat_level": "low",
+        "visual_identity": "Керамический горшок с мягким янтарным свечением внутри",
+        "expansion_hooks": [
+          "Горшки разных цветов",
+          "Горшки, меняющие свойства",
+          "Горшки, влияющие на соседей",
+          "Горшки с таймером"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_004",
+          "resource_002"
+        ]
+      },
+      {
+        "id": "entity_003",
+        "name": "Теневая стена",
+        "entity_type": "wall",
+        "role": "Статичное препятствие",
+        "behavior_or_ai_logic": "Блокирует движение игрока и горшков, не может быть разрушена базовыми действиями",
+        "habitat_or_presence": [
+          "location_002",
+          "location_003",
+          "location_004",
+          "location_005",
+          "location_006",
+          "location_007",
+          "location_008",
+          "location_009",
+          "location_010",
+          "location_011",
+          "location_012",
+          "location_013",
+          "location_014",
+          "location_015",
+          "location_016",
+          "location_017",
+          "location_018",
+          "location_019",
+          "location_020",
+          "location_021",
+          "location_022",
+          "location_023",
+          "location_024",
+          "location_025",
+          "location_026",
+          "location_027",
+          "location_028",
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042",
+          "location_043",
+          "location_044",
+          "location_045",
+          "location_046",
+          "location_047",
+          "location_048",
+          "location_049",
+          "location_050",
+          "location_051",
+          "location_052",
+          "location_053",
+          "location_054",
+          "location_055",
+          "location_056",
+          "location_057",
+          "location_058",
+          "location_059",
+          "location_060",
+          "location_061",
+          "location_062",
+          "location_063",
+          "location_064",
+          "location_065",
+          "location_066",
+          "location_067",
+          "location_068",
+          "location_069",
+          "location_070"
+        ],
+        "relationships": {
+          "entity_001": "блокирует",
+          "entity_002": "блокирует"
+        },
+        "resources": [],
+        "threat_level": "none",
+        "visual_identity": "Тёмные кирпичные или сланцевые блоки, поглощающие свет",
+        "expansion_hooks": [
+          "Разрушаемые стены",
+          "Стены, реагирующие на свет",
+          "Подвижные стены",
+          "Стены, меняющие тип"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002"
+        ]
+      },
+      {
+        "id": "entity_004",
+        "name": "Лунка-грядка",
+        "entity_type": "goal",
+        "role": "Цель уровня",
+        "behavior_or_ai_logic": "Активируется при нахождении на ней горшка, генерирует событие победы при покрытии всех лунок",
+        "habitat_or_presence": [
+          "location_001",
+          "location_002",
+          "location_003",
+          "location_004",
+          "location_005",
+          "location_006",
+          "location_007",
+          "location_008",
+          "location_009",
+          "location_010",
+          "location_011",
+          "location_012",
+          "location_013",
+          "location_014",
+          "location_015",
+          "location_016",
+          "location_017",
+          "location_018",
+          "location_019",
+          "location_020",
+          "location_021",
+          "location_022",
+          "location_023",
+          "location_024",
+          "location_025",
+          "location_026",
+          "location_027",
+          "location_028",
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042",
+          "location_043",
+          "location_044",
+          "location_045",
+          "location_046",
+          "location_047",
+          "location_048",
+          "location_049",
+          "location_050",
+          "location_051",
+          "location_052",
+          "location_053",
+          "location_054",
+          "location_055",
+          "location_056",
+          "location_057",
+          "location_058",
+          "location_059",
+          "location_060",
+          "location_061",
+          "location_062",
+          "location_063",
+          "location_064",
+          "location_065",
+          "location_066",
+          "location_067",
+          "location_068",
+          "location_069",
+          "location_070"
+        ],
+        "relationships": {
+          "entity_002": "активируется"
+        },
+        "resources": [
+          "resource_002",
+          "resource_003"
+        ],
+        "threat_level": "none",
+        "visual_identity": "Контурный круг на земле, вспыхивающий при активации",
+        "expansion_hooks": [
+          "Лунки с порядком активации",
+          "Лунки, требующие нескольких горшков",
+          "Исчезающие лунки",
+          "Лунки-ловушки"
+        ],
+        "relevant_ids": [
+          "entity_002",
+          "resource_002",
+          "resource_003"
+        ]
+      },
+      {
+        "id": "entity_005",
+        "name": "Хрупкий мох",
+        "entity_type": "thin_ice",
+        "role": "Временное препятствие или путь",
+        "behavior_or_ai_logic": "Меняет состояние на непроходимое после первого прохождения по нему",
+        "habitat_or_presence": [
+          "location_005",
+          "location_010",
+          "location_046",
+          "location_050",
+          "location_057",
+          "location_063",
+          "location_070"
+        ],
+        "relationships": {
+          "entity_001": "разрушается при проходе",
+          "entity_002": "разрушается при проходе"
+        },
+        "resources": [],
+        "threat_level": "medium",
+        "visual_identity": "Ярко-зелёный мох, темнеющий и трескающийся после активации",
+        "expansion_hooks": [
+          "Восстанавливающийся мох",
+          "Мох, меняющий направление",
+          "Мох-пружина",
+          "Мох, влияющий на ресурсы"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002"
+        ]
+      },
+      {
+        "id": "entity_006",
+        "name": "Скользкая черепица",
+        "entity_type": "slip_modifier",
+        "role": "Модификатор движения",
+        "behavior_or_ai_logic": "Заставляет объект продолжать движение в том же направлении до встречи с препятствием",
+        "habitat_or_presence": [
+          "location_006",
+          "location_010",
+          "location_029",
+          "location_030",
+          "location_031",
+          "location_032",
+          "location_033",
+          "location_034",
+          "location_035",
+          "location_036",
+          "location_037",
+          "location_038",
+          "location_039",
+          "location_040",
+          "location_041",
+          "location_042",
+          "location_057",
+          "location_063",
+          "location_070"
+        ],
+        "relationships": {
+          "entity_001": "изменяет движение",
+          "entity_002": "изменяет движение"
+        },
+        "resources": [],
+        "threat_level": "medium",
+        "visual_identity": "Блестящая, гладкая поверхность с визуальными стрелками направления",
+        "expansion_hooks": [
+          "Скольжение с поворотом",
+          "Скольжение, зависящее от времени",
+          "Скольжение, создающее цепные реакции",
+          "Скольжение, влияющее на ресурсы"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "id": "resource_001",
+        "name": "Отмотка света",
+        "resource_type": "special_action",
+        "origin": "Механизм фонаря фонарщика",
+        "extraction_method": "Накопление между уровнями или через мета-прогрессию",
+        "rarity_tier": "rare",
+        "availability": "limited_per_level",
+        "controllers": [
+          "faction_005"
+        ],
+        "users": [
+          "entity_001"
+        ],
+        "byproducts_or_waste": [
+          "Световой след на сетке"
+        ],
+        "importance": "critical",
+        "visual_identity": "Кнопка с янтарным свечением, призрачный след при использовании",
+        "expansion_hooks": [
+          "Усиленная отмотка",
+          "Отмотка с изменением поля",
+          "Бесплатная отмотка за достижение",
+          "Отмотка, влияющая на соседей"
+        ],
+        "relevant_ids": [
+          "faction_005",
+          "entity_001"
+        ]
+      },
+      {
+        "id": "resource_002",
+        "name": "Искры",
+        "resource_type": "currency",
+        "origin": "Активация лунок-грядок",
+        "extraction_method": "Награда за завершение микро-уровня",
+        "rarity_tier": "common",
+        "availability": "abundant",
+        "controllers": [
+          "faction_001"
+        ],
+        "users": [
+          "entity_001"
+        ],
+        "byproducts_or_waste": [
+          "Нет"
+        ],
+        "importance": "high",
+        "visual_identity": "Мелкие золотистые частицы, собирающиеся в счётчик",
+        "expansion_hooks": [
+          "Искры за идеальное прохождение",
+          "Искры, меняющие цвет",
+          "Искры, создающие цепные реакции",
+          "Искры, влияющие на ресурсы"
+        ],
+        "relevant_ids": [
+          "faction_001",
+          "entity_001"
+        ]
+      },
+      {
+        "id": "resource_003",
+        "name": "Светлячок",
+        "resource_type": "rating",
+        "origin": "Оптимизация прохождения (звёзды)",
+        "extraction_method": "Награда за минимальное количество ходов и откатов",
+        "rarity_tier": "epic",
+        "availability": "limited_by_performance",
+        "controllers": [
+          "faction_004"
+        ],
+        "users": [
+          "entity_001"
+        ],
+        "byproducts_or_waste": [
+          "Нет"
+        ],
+        "importance": "high",
+        "visual_identity": "Пульсирующий зелёный светлячок, летающий вокруг интерфейса",
+        "expansion_hooks": [
+          "Светлячки за секретные пути",
+          "Светлячки, меняющие цвет",
+          "Светлячки, создающие цепные реакции",
+          "Светлячки, влияющие на ресурсы"
+        ],
+        "relevant_ids": [
+          "faction_004",
+          "entity_001"
+        ]
+      },
+      {
+        "id": "resource_004",
+        "name": "Настройка фонаря",
+        "resource_type": "modifier",
+        "origin": "Мета-прогрессия и магазин",
+        "extraction_method": "Покупка за искры или награда за этапы",
+        "rarity_tier": "rare",
+        "availability": "persistent",
+        "controllers": [
+          "faction_001"
+        ],
+        "users": [
+          "entity_001"
+        ],
+        "byproducts_or_waste": [
+          "Нет"
+        ],
+        "importance": "high",
+        "visual_identity": "Иконка шестерёнки или лампочки в меню выбора",
+        "expansion_hooks": [
+          "Новые типы настроек",
+          "Настройки, меняющиеся со временем",
+          "Настройки, создающие цепные реакции",
+          "Настройки, влияющие на ресурсы"
+        ],
+        "relevant_ids": [
+          "faction_001",
+          "entity_001"
+        ]
+      },
+      {
+        "id": "resource_005",
+        "name": "Подсказка садовника",
+        "resource_type": "special_action",
+        "origin": "Система помощи или магазин",
+        "extraction_method": "Покупка за искры или накопление",
+        "rarity_tier": "uncommon",
+        "availability": "limited",
+        "controllers": [
+          "faction_001"
+        ],
+        "users": [
+          "entity_001"
+        ],
+        "byproducts_or_waste": [
+          "Нет"
+        ],
+        "importance": "medium",
+        "visual_identity": "Светящаяся стрелка или контур правильного хода",
+        "expansion_hooks": [
+          "Частичная подсказка",
+          "Подсказка за валюту",
+          "Подсказка, открывающая секрет",
+          "Автоматическая подсказка при бездействии"
+        ],
+        "relevant_ids": [
+          "faction_001",
+          "entity_001"
+        ]
+      },
+      {
+        "id": "resource_006",
+        "name": "Право на рестарт",
+        "resource_type": "special_action",
+        "origin": "Базовая механика интерфейса",
+        "extraction_method": "Всегда доступно без ограничений",
+        "rarity_tier": "common",
+        "availability": "unlimited",
+        "controllers": [
+          "faction_005"
+        ],
+        "users": [
+          "entity_001"
+        ],
+        "byproducts_or_waste": [
+          "Сброс прогресса уровня"
+        ],
+        "importance": "medium",
+        "visual_identity": "Кнопка перезапуска с иконкой круговой стрелки",
+        "expansion_hooks": [
+          "Рестарт с сохранением модификаторов",
+          "Рестарт, меняющий уровень",
+          "Рестарт, создающий цепные реакции",
+          "Рестарт, влияющий на ресурсы"
+        ],
+        "relevant_ids": [
+          "faction_005",
+          "entity_001"
+        ]
+      }
+    ],
+    "conflicts": [
+      {
+        "id": "conflict_001",
+        "name": "Зажечь все лунки",
+        "conflict_type": "primary_objective",
+        "cause": "Необходимость активации всех целей для завершения уровня",
+        "hidden_motives": [
+          "Проверка базового понимания механики толкания"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002",
+          "entity_004"
+        ],
+        "stakes": "Завершение микро-уровня и получение базовой награды",
+        "resources_involved": [
+          "resource_002",
+          "resource_003"
+        ],
+        "regions_involved": [
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ],
+        "escalation_potential": "Добавление большего количества лунок и горшков",
+        "visual_identity": "Яркое свечение всех лунок при победе",
+        "expansion_hooks": [
+          "Лунки с порядком активации",
+          "Лунки, требующие нескольких горшков",
+          "Исчезающие лунки",
+          "Лунки-ловушки"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "entity_004",
+          "resource_002",
+          "resource_003",
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_002",
+        "name": "Уложиться в лимит шагов",
+        "conflict_type": "constraint",
+        "cause": "Ограниченное количество движений для повышения сложности",
+        "hidden_motives": [
+          "Поощрение поиска оптимального пути"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002"
+        ],
+        "stakes": "Провал уровня при превышении лимита, потеря ресурсов",
+        "resources_involved": [
+          "resource_003"
+        ],
+        "regions_involved": [
+          "region_001",
+          "region_002",
+          "region_004",
+          "region_005"
+        ],
+        "escalation_potential": "Ужесточение лимитов на поздних этапах",
+        "visual_identity": "Мигающий счётчик ходов, напряжённый свет",
+        "expansion_hooks": [
+          "Жёсткий лимит",
+          "Лимит только на толчки",
+          "Бонус за экономию",
+          "Динамический лимит"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "resource_003",
+          "region_001",
+          "region_002",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_003",
+        "name": "Без использования отмотки",
+        "conflict_type": "challenge",
+        "cause": "Специальное условие для получения максимальной награды",
+        "hidden_motives": [
+          "Проверка полного понимания механик без права на ошибку"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002"
+        ],
+        "stakes": "Получение максимального количества светлячков",
+        "resources_involved": [
+          "resource_001",
+          "resource_003"
+        ],
+        "regions_involved": [
+          "region_002",
+          "region_004",
+          "region_005"
+        ],
+        "escalation_potential": "Усложнение раскладов, требующих идеального исполнения",
+        "visual_identity": "Заблокированная иконка отмотки, особый визуальный эффект при победе",
+        "expansion_hooks": [
+          "Нулевая отмотка",
+          "Отмотка, восстанавливающаяся за ходы",
+          "Отмотка, стоящая валюту",
+          "Отмотка, меняющая поле"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "resource_001",
+          "resource_003",
+          "region_002",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_004",
+        "name": "Не загнать в тень",
+        "conflict_type": "avoidance",
+        "cause": "Наличие тупиковых зон, блокирующих прогресс",
+        "hidden_motives": [
+          "Обучение предвидению последствий каждого хода"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002",
+          "entity_003"
+        ],
+        "stakes": "Невозможность завершения уровня без отмотки или рестарта",
+        "resources_involved": [
+          "resource_001",
+          "resource_006"
+        ],
+        "regions_involved": [
+          "region_001",
+          "region_002",
+          "region_004",
+          "region_005"
+        ],
+        "escalation_potential": "Увеличение количества и сложности теневых ловушек",
+        "visual_identity": "Предупреждающий индикатор при приближении к тупику",
+        "expansion_hooks": [
+          "Добавление второго тупика",
+          "Иллюзия тупика",
+          "Отмотка как спасение",
+          "Динамическая тень"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "resource_001",
+          "resource_006",
+          "region_001",
+          "region_002",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_005",
+        "name": "Определённый порядок зажигания",
+        "conflict_type": "sequence",
+        "cause": "Механика, требующая активации целей в строгой последовательности",
+        "hidden_motives": [
+          "Усложнение планирования маршрута"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002",
+          "entity_004"
+        ],
+        "stakes": "Блокировка уровня при неправильном порядке",
+        "resources_involved": [
+          "resource_003"
+        ],
+        "regions_involved": [
+          "region_003",
+          "region_005"
+        ],
+        "escalation_potential": "Увеличение количества целей и сложности последовательности",
+        "visual_identity": "Цифры или цветовые индикаторы на лунках",
+        "expansion_hooks": [
+          "Цели, перемещающиеся по расписанию",
+          "Цели, активируемые только определёнными горшками",
+          "Цели, создающие цепные реакции",
+          "Цели, исчезающие после активации"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "entity_004",
+          "resource_003",
+          "region_003",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_006",
+        "name": "Сохранить все искры",
+        "conflict_type": "optimization",
+        "cause": "Необходимость пройти уровень без использования платных или ограниченных ресурсов",
+        "hidden_motives": [
+          "Поощрение мастерства и экономии"
+        ],
+        "participants": [
+          "entity_001"
+        ],
+        "stakes": "Получение бонусных наград за идеальное прохождение",
+        "resources_involved": [
+          "resource_001",
+          "resource_002",
+          "resource_005"
+        ],
+        "regions_involved": [
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ],
+        "escalation_potential": "Усложнение уровней, делающее сохранение ресурсов трудным",
+        "visual_identity": "Значок сохранения ресурсов, особый эффект при победе",
+        "expansion_hooks": [
+          "Абсолютный ноль ресурсов",
+          "Ресурсы, восстанавливающиеся за идеальные действия",
+          "Ресурсы, стоящие огромную валюту",
+          "Ресурсы, меняющие поле радикально"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "resource_001",
+          "resource_002",
+          "resource_005",
+          "region_001",
+          "region_002",
+          "region_003",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_007",
+        "name": "Комбинированное ограничение",
+        "conflict_type": "complex",
+        "cause": "Сочетание нескольких условий победы/поражения",
+        "hidden_motives": [
+          "Проверка способности управлять множеством переменных"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004"
+        ],
+        "stakes": "Высокий риск провала, высокая награда за успех",
+        "resources_involved": [
+          "resource_001",
+          "resource_003"
+        ],
+        "regions_involved": [
+          "region_003",
+          "region_004",
+          "region_005"
+        ],
+        "escalation_potential": "Добавление новых условий в комбинацию",
+        "visual_identity": "Множественные индикаторы ограничений на интерфейсе",
+        "expansion_hooks": [
+          "Усложнение расклада",
+          "Добавление модификатора",
+          "Секретный выход",
+          "Бонусная цель"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "entity_003",
+          "entity_004",
+          "resource_001",
+          "resource_003",
+          "region_003",
+          "region_004",
+          "region_005"
+        ]
+      },
+      {
+        "id": "conflict_008",
+        "name": "Пройти без скольжения",
+        "conflict_type": "avoidance",
+        "cause": "Условие, запрещающее использование определённых механик",
+        "hidden_motives": [
+          "Проверка альтернативных путей решения"
+        ],
+        "participants": [
+          "entity_001",
+          "entity_002",
+          "entity_006"
+        ],
+        "stakes": "Получение особого достижения или награды",
+        "resources_involved": [
+          "resource_003"
+        ],
+        "regions_involved": [
+          "region_003",
+          "region_005"
+        ],
+        "escalation_potential": "Усложнение уровней, где скольжение кажется неизбежным",
+        "visual_identity": "Заблокированная иконка скольжения, особый визуальный эффект при победе",
+        "expansion_hooks": [
+          "Скольжение с поворотом",
+          "Скольжение, зависящее от времени",
+          "Скольжение, создающее цепные реакции",
+          "Скольжение, влияющее на ресурсы"
+        ],
+        "relevant_ids": [
+          "entity_001",
+          "entity_002",
+          "entity_006",
+          "resource_003",
+          "region_003",
+          "region_005"
+        ]
+      }
+    ]
+  },
+  "global_relationships": [
+    {
+      "source_id": "faction_001",
+      "source_type": "faction",
+      "relation": "противостоит",
+      "target_id": "faction_002",
+      "target_type": "faction",
+      "reason": "Свет и тень являются противоположными силами в мире",
+      "consequence": "Создание напряжённости в уровнях, где обе механики присутствуют"
+    },
+    {
+      "source_id": "faction_002",
+      "source_type": "faction",
+      "relation": "противостоит",
+      "target_id": "faction_001",
+      "target_type": "faction",
+      "reason": "Тень стремится поглотить свет",
+      "consequence": "Усложнение прохождения при активации теневых механик"
+    },
+    {
+      "source_id": "faction_003",
+      "source_type": "faction",
+      "relation": "усиливает",
+      "target_id": "faction_002",
+      "target_type": "faction",
+      "reason": "Мох создаёт дополнительные препятствия, поддерживая тень",
+      "consequence": "Комбинированная угроза на уровнях с обеими механиками"
+    },
+    {
+      "source_id": "faction_004",
+      "source_type": "faction",
+      "relation": "поддерживает",
+      "target_id": "faction_001",
+      "target_type": "faction",
+      "reason": "Цели требуют активации светом",
+      "consequence": "Синергия между достижением целей и распространением света"
+    },
+    {
+      "source_id": "region_001",
+      "source_type": "region",
+      "relation": "предшествует",
+      "target_id": "region_002",
+      "target_type": "region",
+      "reason": "Обучение в старом саду ведёт к сложным лабиринтам",
+      "consequence": "Постепенное увеличение сложности и введение новых механик"
+    },
+    {
+      "source_id": "region_002",
+      "source_type": "region",
+      "relation": "предшествует",
+      "target_id": "region_003",
+      "target_type": "region",
+      "reason": "Лабиринты подготавливают к динамичным террасам",
+      "consequence": "Переход от статичных препятствий к управлению движением"
+    },
+    {
+      "source_id": "region_003",
+      "source_type": "region",
+      "relation": "предшествует",
+      "target_id": "region_004",
+      "target_type": "region",
+      "reason": "Террасы ведут к строгим сланцевым переходам",
+      "consequence": "Ужесточение ограничений и ресурсного давления"
+    },
+    {
+      "source_id": "region_004",
+      "source_type": "region",
+      "relation": "предшествует",
+      "target_id": "region_005",
+      "target_type": "region",
+      "reason": "Сланцевые переходы ведут к финальному кругу",
+      "consequence": "Синтез всех механик в финальных испытаниях"
+    },
+    {
+      "source_id": "conflict_001",
+      "source_type": "conflict",
+      "relation": "требует",
+      "target_id": "conflict_004",
+      "target_type": "conflict",
+      "reason": "Зажжение всех лунок невозможно, если горшки загнаны в тень",
+      "consequence": "Необходимость избегать тупиков для достижения основной цели"
+    },
+    {
+      "source_id": "conflict_004",
+      "source_type": "conflict",
+      "relation": "влияет на",
+      "target_id": "conflict_001",
+      "target_type": "conflict",
+      "reason": "Избегание тени является условием для зажигания лунок",
+      "consequence": "Повышение важности планирования маршрута"
+    },
+    {
+      "source_id": "conflict_002",
+      "source_type": "conflict",
+      "relation": "усиливает",
+      "target_id": "conflict_003",
+      "target_type": "conflict",
+      "reason": "Ограничение шагов делает отказ от отмотки более сложным",
+      "consequence": "Экстремальная сложность при комбинировании этих условий"
+    },
+    {
+      "source_id": "conflict_003",
+      "source_type": "conflict",
+      "relation": "усиливает",
+      "target_id": "conflict_002",
+      "target_type": "conflict",
+      "reason": "Отказ от отмотки требует ещё более точного соблюдения лимита шагов",
+      "consequence": "Необходимость идеального планирования"
+    },
+    {
+      "source_id": "entity_001",
+      "source_type": "entity",
+      "relation": "толкает",
+      "target_id": "entity_002",
+      "target_type": "entity",
+      "reason": "Базовая механика взаимодействия",
+      "consequence": "Перемещение горшков для достижения целей"
+    },
+    {
+      "source_id": "entity_002",
+      "source_type": "entity",
+      "relation": "активирует",
+      "target_id": "entity_004",
+      "target_type": "entity",
+      "reason": "Условие победы",
+      "consequence": "Генерация события GOAL_REACHED и завершение уровня"
+    },
+    {
+      "source_id": "resource_001",
+      "source_type": "resource",
+      "relation": "корректирует",
+      "target_id": "entity_001",
+      "target_type": "entity",
+      "reason": "Отмотка позволяет исправить ошибки игрока",
+      "consequence": "Возврат состояния мира на 1-2 хода назад, снижение риска провала"
+    }
+  ]
+}
