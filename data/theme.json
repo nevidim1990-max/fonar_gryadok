@@ -8,7 +8,7 @@
       30,
       55
     ],
-    "reason": "Ночной сад держится на тёплом свете фонарей и светящихся горшков; без янтарного свечения мир не читается как уютная ночная крыша."
+    "reason": "Янтарные горшки, детали фонаря и вставки на крышах связывают ночной сад в один мир. Тёплая заливка узнаваема на спокойном сланцевом окружении и не требует постоянного свечения."
   },
   "market_research": {
     "data_source": "web_search",
@@ -77,31 +77,33 @@
   },
   "data": {
     "palette": [
+      "#18242E",
+      "#F0DEC0",
       "#D6A63E",
-      "#315568",
-      "#9FB6C2",
-      "#D9745A",
-      "#3E6B4F"
+      "#8B9DA8",
+      "#8CBEA5"
     ],
     "color_roles": {
       "primary": "#D6A63E",
-      "secondary": "#315568",
-      "accent": "#D9745A",
-      "background": "#315568",
-      "text": "#9FB6C2",
-      "danger": "#D9745A",
-      "success": "#3E6B4F"
+      "secondary": "#8B9DA8",
+      "accent": "#D6A63E",
+      "background": "#18242E",
+      "text": "#F0DEC0",
+      "danger": "#DF8C75",
+      "success": "#8CBEA5"
     },
-    "art_style": "2d flat vector, cozy night garden, soft glow, minimalist, warm lantern light",
+    "art_style": "clean bold outlines, flat colors, friendly style, minimalist",
     "visual_keywords": [
       "cozy",
       "nocturnal",
       "lantern-lit",
       "rooftop garden",
-      "soft glow",
       "minimalist",
       "fireflies",
-      "mossy brick"
+      "mossy brick",
+      "faceted plant pots",
+      "ring-shaped planting sockets",
+      "wide socket rims around pots"
     ],
     "sound_mood": [
       "soft ambient",
@@ -134,85 +136,85 @@
         "ENEMY",
         "UI",
         "DANGER",
-        "SAFETY"
+        "SAFETY",
+        "INTERACTIVE",
+        "ACCENT"
       ],
       "mutable_roles": [
         "BACKGROUND",
         "FOREGROUND",
-        "INTERACTIVE",
-        "ACCENT",
         "NEUTRAL"
       ],
       "role_palettes": {
         "PLAYER": {
-          "primary": "#D6A63E",
-          "secondary": "#3E6B4F",
-          "accent": "#9FB6C2",
-          "outline": "#2B1D0B",
-          "highlight": "#F4D98F"
+          "primary": "#F0DEC0",
+          "secondary": "#2B3944",
+          "accent": "#D6A63E",
+          "outline": "#18242E",
+          "highlight": "#F7E8CE"
         },
         "ENEMY": {
-          "primary": "#9FB6C2",
-          "secondary": "#315568",
-          "accent": "#D9745A",
-          "outline": "#2A3A42",
-          "highlight": "#E8F3F7"
+          "primary": "#DF8C75",
+          "secondary": "#18242E",
+          "accent": "#F0DEC0",
+          "outline": "#502F2A",
+          "highlight": "#F0B8A3"
         },
         "BACKGROUND": {
-          "primary": "#315568",
-          "secondary": "#9FB6C2",
-          "accent": "#D6A63E",
-          "outline": "#000000",
-          "highlight": "#B7D4E0"
+          "primary": "#18242E",
+          "secondary": "#263642",
+          "accent": "#596F7E",
+          "outline": "#111B23",
+          "highlight": "#465C6B"
         },
         "FOREGROUND": {
-          "primary": "#3E6B4F",
-          "secondary": "#D6A63E",
-          "accent": "#D9745A",
-          "outline": "#050805",
-          "highlight": "#A8D8B8"
+          "primary": "#2B3944",
+          "secondary": "#18242E",
+          "accent": "#556755",
+          "outline": "#18242E",
+          "highlight": "#667C89"
         },
         "DANGER": {
-          "primary": "#D9745A",
-          "secondary": "#315568",
-          "accent": "#3E6B4F",
-          "outline": "#5A1C12",
-          "highlight": "#F7C9BE"
+          "primary": "#DF8C75",
+          "secondary": "#18242E",
+          "accent": "#F0DEC0",
+          "outline": "#502F2A",
+          "highlight": "#F0B8A3"
         },
         "SAFETY": {
-          "primary": "#3E6B4F",
-          "secondary": "#D6A63E",
-          "accent": "#D9745A",
-          "outline": "#050805",
-          "highlight": "#A8D8B8"
+          "primary": "#8CBEA5",
+          "secondary": "#18242E",
+          "accent": "#F0DEC0",
+          "outline": "#233D34",
+          "highlight": "#BDDECA"
         },
         "INTERACTIVE": {
           "primary": "#D6A63E",
-          "secondary": "#3E6B4F",
-          "accent": "#9FB6C2",
-          "outline": "#2B1D0B",
-          "highlight": "#F4D98F"
+          "secondary": "#18242E",
+          "accent": "#F0DEC0",
+          "outline": "#18242E",
+          "highlight": "#EBCB87"
         },
         "UI": {
-          "primary": "#D6A63E",
-          "secondary": "#315568",
-          "accent": "#D9745A",
-          "outline": "#2B1D0B",
-          "highlight": "#F4D98F"
+          "primary": "#18242E",
+          "secondary": "#F0DEC0",
+          "accent": "#D6A63E",
+          "outline": "#8B9DA8",
+          "highlight": "#344A5A"
         },
         "ACCENT": {
-          "primary": "#D9745A",
-          "secondary": "#315568",
-          "accent": "#3E6B4F",
-          "outline": "#5A1C12",
-          "highlight": "#F7C9BE"
+          "primary": "#D6A63E",
+          "secondary": "#F0DEC0",
+          "accent": "#18242E",
+          "outline": "#18242E",
+          "highlight": "#EBCB87"
         },
         "NEUTRAL": {
-          "primary": "#9FB6C2",
-          "secondary": "#315568",
-          "accent": "#D6A63E",
-          "outline": "#2A3A42",
-          "highlight": "#E8F3F7"
+          "primary": "#8B9DA8",
+          "secondary": "#51432E",
+          "accent": "#556755",
+          "outline": "#293742",
+          "highlight": "#B8C7CC"
         }
       }
     },
@@ -220,7 +222,7 @@
     "palette_families": [
       {
         "family_id": "mossy_brick",
-        "material": "тёплый кирпич с мхом",
+        "material": "кирпич с мхом",
         "hue_shift": 0,
         "saturation_shift": 0,
         "value_shift": 0
@@ -228,16 +230,16 @@
       {
         "family_id": "wet_slate",
         "material": "мокрый сланец",
-        "hue_shift": 25,
-        "saturation_shift": -0.05,
-        "value_shift": -0.05
+        "hue_shift": 8,
+        "saturation_shift": -0.02,
+        "value_shift": -0.02
       },
       {
         "family_id": "copper_trim",
         "material": "медная окантовка",
-        "hue_shift": 50,
-        "saturation_shift": 0.05,
-        "value_shift": 0.05
+        "hue_shift": -10,
+        "saturation_shift": 0.02,
+        "value_shift": 0.01
       }
     ],
     "type_palettes": []
